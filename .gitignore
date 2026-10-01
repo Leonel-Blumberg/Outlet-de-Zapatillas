@@ -1,0 +1,23 @@
+# Node
+node_modules/
+dist/
+
+# Variables de entorno locales
+.env.local
+.env.*.local
+
+# .NET
+bin/
+obj/
+.vs/
+*.user
+
+# Archivos temporales de Word
+~$*.docx
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
