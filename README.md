@@ -6,7 +6,7 @@ Trabajo cuatrimestral de **Bases de Datos Aplicada**. Dashboard web para una cad
 | --- | --- | --- |
 | Frontend | React 19 + Vite + React Router | [`client/`](client/) |
 | Backend | ASP.NET Core Web API (C#) | [`server/`](server/) |
-| Base de datos | PostgreSQL | scripts en `server/` |
+| Base de datos | PostgreSQL | [`server/db/`](server/db/) |
 | Documentación | Word, DER y mockups | [`docs/`](docs/) |
 
 ## Primera entrega
@@ -15,13 +15,24 @@ Trabajo cuatrimestral de **Bases de Datos Aplicada**. Dashboard web para una cad
 - [x] DER: [`docs/der.mmd`](docs/der.mmd) (Mermaid) y [`docs/img/der.png`](docs/img/der.png)
 - [x] Login y registro (frontend)
 - [x] Mockups de semaforización, drill down / drill up y tablas: [`docs/img/mockups/`](docs/img/mockups/) y [Claude Design](https://claude.ai/artifact/2vPc2G4DkwdM5ZDvJAzNo7)
-- [ ] API de autenticación, conexión con PostgreSQL y siembra de usuarios (backend)
+- [x] API de autenticación, conexión con PostgreSQL y siembra de usuarios (backend): [`server/`](server/)
 
 ![DER](docs/img/der.png)
 
-## Cómo correr el frontend
+## Cómo correr el proyecto
 
-Requisitos: Node.js 20 o superior.
+Requisitos: Node.js 20 o superior, .NET SDK 10 y PostgreSQL corriendo en `localhost:5432` (usuario `postgres`, contraseña `postgres`; para usar otra ver [`server/README.md`](server/README.md#configuración)).
+
+**1. Backend** (crea la base `outlet_zapatillas`, las tablas y los usuarios de prueba la primera vez):
+
+```bash
+cd server/OutletApi
+dotnet run
+```
+
+Queda en http://localhost:5000.
+
+**2. Frontend**, en otra terminal:
 
 ```bash
 cd client
@@ -29,18 +40,11 @@ npm install
 npm run dev
 ```
 
-Abre en http://localhost:5173.
-
-Mientras el backend no esté listo, el login funciona en **modo simulado** (`VITE_USE_MOCK=true` en `client/.env.development`): las cuentas se guardan en el navegador y se puede entrar con los usuarios de la siembra (ver abajo).
-
-Para usar la API real, crear `client/.env.development.local`:
-
-```bash
-VITE_USE_MOCK=false
-VITE_API_PROXY_TARGET=http://localhost:5000
-```
+Abre en http://localhost:5173. Entrar con alguno de los [usuarios de la siembra](#usuarios-de-la-siembra).
 
 Vite redirige todas las llamadas a `/api` al backend (`VITE_API_PROXY_TARGET`), así que en desarrollo no hace falta configurar CORS.
+
+Para probar el frontend sin backend existe un **modo simulado**: crear `client/.env.development.local` con `VITE_USE_MOCK=true`. Las cuentas se guardan en el navegador.
 
 ## Contrato de la API de autenticación
 
@@ -58,7 +62,7 @@ El frontend muestra el campo `message` de las respuestas de error tal cual, así
 
 ### Contraseñas
 
-Se guardan con `PasswordHasher<T>` de ASP.NET Core Identity (PBKDF2 · HMAC-SHA256 con sal aleatoria e iteraciones), no en texto plano ni con un SHA-256 sin sal:
+Se guardan con `PasswordHasher<T>` de ASP.NET Core Identity (PBKDF2 · HMAC-SHA512 con sal aleatoria y 100.000 iteraciones), no en texto plano ni con un SHA-256 sin sal:
 
 ```csharp
 var hasher = new PasswordHasher<Usuario>();
@@ -71,7 +75,7 @@ Reglas de validación del registro, iguales a las del frontend: email válido y 
 
 ### Usuarios de la siembra
 
-Cuentas de prueba que tiene que crear la siembra del backend (las mismas que usa el modo simulado del frontend):
+Cuentas de prueba que crea [`server/db/02_siembra_usuarios.sql`](server/db/02_siembra_usuarios.sql) con la contraseña ya hasheada (las mismas que usa el modo simulado del frontend):
 
 | Email | Contraseña | Rol |
 | --- | --- | --- |

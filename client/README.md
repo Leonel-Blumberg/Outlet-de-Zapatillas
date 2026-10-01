@@ -34,7 +34,7 @@ Cualquier otra ruta redirige a `/tablero` y, sin sesión, termina en `/login`.
 
 | Variable | Default | Uso |
 | --- | --- | --- |
-| `VITE_USE_MOCK` | `true` en desarrollo | `true`: login contra usuarios simulados en el navegador. `false`: contra la API ASP.NET. |
+| `VITE_USE_MOCK` | `false` | `false`: login contra la API ASP.NET. `true`: contra usuarios simulados en el navegador (sin backend). |
 | `VITE_API_PROXY_TARGET` | `http://localhost:5000` | Backend al que Vite redirige `/api` en desarrollo. |
 | `VITE_API_URL` | `/api` | Prefijo de la API (para builds de producción). |
 
