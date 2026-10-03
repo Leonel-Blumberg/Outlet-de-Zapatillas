@@ -1,5 +1,7 @@
 # Frontend · React + Vite
 
+El login y el registro usan la API ASP.NET de [`server/`](../server/), así que el backend tiene que estar corriendo (ver el [README principal](../README.md#cómo-correr-el-proyecto)).
+
 ```bash
 npm install
 npm run dev     # http://localhost:5173
@@ -11,13 +13,13 @@ npm run lint
 
 ```
 src/
-  api/          llamadas HTTP (http.js), endpoints de auth (auth.js) y backend simulado (mockAuth.js)
+  api/          llamadas HTTP (http.js) y endpoints de autenticación (auth.js)
   components/   layout de login/registro, campos de formulario, rutas protegidas
-  context/      AuthContext: sesión del usuario (login, registro, logout)
+  context/      sesión del usuario: AuthProvider (login, registro, logout) y hook useAuth
   pages/        LoginPage, RegisterPage, DashboardPage
   styles/       estilos globales y tokens de color
   utils/        validaciones de formularios
-  config.js     nombre de la app, URL de la API y modo simulado
+  config.js     nombre de la app, URL de la API y límites de los formularios
 ```
 
 ## Rutas
@@ -34,7 +36,6 @@ Cualquier otra ruta redirige a `/tablero` y, sin sesión, termina en `/login`.
 
 | Variable | Default | Uso |
 | --- | --- | --- |
-| `VITE_USE_MOCK` | `false` | `false`: login contra la API ASP.NET. `true`: contra usuarios simulados en el navegador (sin backend). |
 | `VITE_API_PROXY_TARGET` | `http://localhost:5000` | Backend al que Vite redirige `/api` en desarrollo. |
 | `VITE_API_URL` | `/api` | Prefijo de la API (para builds de producción). |
 

@@ -18,7 +18,7 @@ server/
 
 ## Cómo correrlo
 
-Requisitos: [.NET SDK 10](https://dotnet.microsoft.com/download) y PostgreSQL (probado con la 17) corriendo en `localhost:5432`.
+Requisitos: [.NET SDK 10](https://dotnet.microsoft.com/download) y PostgreSQL (probado con las versiones 16 y 17) corriendo en `localhost:5432`.
 
 ```bash
 cd server/OutletApi
