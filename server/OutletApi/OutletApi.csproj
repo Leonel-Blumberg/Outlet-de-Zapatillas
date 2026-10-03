@@ -7,14 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.89" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
   </ItemGroup>
 
-  <!-- Scripts de creación de tablas y siembra (server/db): la API los ejecuta al arrancar -->
+  <!-- Scripts de creación de tablas y siembra (server/base de datos): la API los ejecuta al arrancar -->
   <ItemGroup>
-    <None Include="..\db\*.sql" Link="db\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\base de datos\*.sql" Link="base de datos\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

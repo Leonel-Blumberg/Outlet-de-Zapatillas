@@ -1,4 +1,3 @@
-using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -19,12 +18,11 @@ if (args is ["hash", var plano])
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ---- Base de datos (PostgreSQL con Npgsql + Dapper) ----
+// ---- Base de datos (PostgreSQL con Npgsql: consultas SQL escritas a mano, sin ORM) ----
 var connectionString = builder.Configuration.GetConnectionString("Outlet")
     ?? throw new InvalidOperationException("Falta ConnectionStrings:Outlet en la configuración.");
 builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
 builder.Services.AddScoped<UsuariosRepository>();
-DefaultTypeMap.MatchNamesWithUnderscores = true;   // id_usuario -> IdUsuario
 
 // ---- Contraseñas: PBKDF2 con HMAC-SHA512, sal aleatoria y 100.000 iteraciones ----
 builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();

@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace OutletApi.Data;
 
-// Al arrancar la API: crea la base si no existe y ejecuta, en orden, los scripts de server/db
+// Al arrancar la API: crea la base si no existe y ejecuta, en orden, los scripts de server/base de datos
 // (creación de tablas y siembra). Los scripts son idempotentes, así que se pueden correr siempre.
 public static class DatabaseInitializer
 {
@@ -10,7 +10,7 @@ public static class DatabaseInitializer
     {
         await CrearBaseSiNoExisteAsync(connectionString, logger);
 
-        var carpeta = Path.Combine(AppContext.BaseDirectory, "db");
+        var carpeta = Path.Combine(AppContext.BaseDirectory, "base de datos");
         var scripts = Directory.GetFiles(carpeta, "*.sql").Order(StringComparer.Ordinal).ToList();
 
         await using var conn = new NpgsqlConnection(connectionString);

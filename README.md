@@ -2,16 +2,16 @@
 
 Trabajo cuatrimestral de **Bases de Datos Aplicada**. Dashboard web para una cadena de outlets de zapatillas con varias sucursales: ventas contra objetivo, stock por talle y actividad de clientes, con semaforización y drill down / drill up (Sucursal › Marca › Modelo › Detalle).
 
-| Capa          | Tecnología                     | Carpeta                    |
-| ------------- | ------------------------------ | -------------------------- |
-| Frontend      | React 19 + Vite + React Router | [`client/`](client/)       |
-| Backend       | ASP.NET Core Web API (C#)      | [`server/`](server/)       |
-| Base de datos | PostgreSQL                     | [`server/db/`](server/db/) |
-| Documentación | Word, DER y mockups            | [`docs/`](docs/)           |
+| Capa          | Tecnología                     | Carpeta                                              |
+| ------------- | ------------------------------ | ---------------------------------------------------- |
+| Frontend      | React 19 + Vite + React Router | [`client/`](client/)                                 |
+| Backend       | ASP.NET Core Web API (C#)      | [`server/`](server/)                                 |
+| Base de datos | PostgreSQL                     | [`server/base de datos/`](server/base%20de%20datos/) |
+| Documentación | Word, DER y mockups            | [`docs/`](docs/)                                     |
 
 ## Primera entrega
 
-- [x] Documento inicial con DER y diccionario de datos: [`docs/Primera_Entrega_Outlet_de_Zapatillas.docx`](docs/Primera_Entrega_Outlet_de_Zapatillas.docx)
+- [x] Documento inicial con DER y diccionario de datos: [`docs/Entrega 1 - Leonel Blumberg y Luciano Migoni.docx`](docs/Entrega%201%20-%20Leonel%20Blumberg%20y%20Luciano%20Migoni.docx)
 - [x] DER: [`docs/img/der.png`](docs/img/der.png) (Lucidchart)
 - [x] Login y registro (frontend)
 - [x] Mockups de semaforización, drill down / drill up y tablas: [`docs/img/mockups/`](docs/img/mockups/) y [Claude Design](https://claude.ai/artifact/2vPc2G4DkwdM5ZDvJAzNo7)
@@ -73,7 +73,7 @@ Reglas de validación del registro, iguales en el frontend y en el backend: nomb
 
 ### Usuarios de la siembra
 
-Cuentas de prueba que crea [`server/db/02_siembra_usuarios.sql`](server/db/02_siembra_usuarios.sql) con la contraseña ya hasheada:
+Cuentas de prueba que crea [`server/base de datos/02_siembra_usuarios.sql`](server/base%20de%20datos/02_siembra_usuarios.sql) con la contraseña ya hasheada:
 
 | Email                | Contraseña    | Rol       |
 | -------------------- | ------------- | --------- |
