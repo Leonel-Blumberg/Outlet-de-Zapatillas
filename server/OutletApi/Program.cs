@@ -1,5 +1,6 @@
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -49,6 +50,11 @@ builder.Services
         };
     });
 builder.Services.AddAuthorization();
+
+// AddAuthentication registra Data Protection, pero la API no lo usa (no hay cookies: la sesión es
+// el JWT firmado con Jwt:Key). Con el proveedor efímero sus claves quedan en memoria y no se
+// escriben en disco, lo que evita el aviso "No XML encryptor configured" al arrancar.
+builder.Services.AddDataProtection().UseEphemeralDataProtectionProvider();
 
 builder.Services
     .AddControllers()
