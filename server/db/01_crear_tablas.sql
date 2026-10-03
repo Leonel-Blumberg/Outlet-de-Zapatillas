@@ -1,6 +1,6 @@
 -- =====================================================================
 -- Outlet de Zapatillas · Creación de tablas (PostgreSQL)
--- Modelo canónico según el DER (docs/der.mmd) y el diccionario de datos
+-- Modelo canónico según el DER (docs/img/der.png) y el diccionario de datos
 -- (sección 5 del documento de la primera entrega).
 --
 -- Se puede ejecutar varias veces: solo crea lo que todavía no existe.
@@ -127,5 +127,16 @@ CREATE TABLE IF NOT EXISTS detalle_ventas (
     precio_unitario numeric(12,2) NOT NULL,
     subtotal        numeric(14,2) NOT NULL,   -- cantidad × precio_unitario
     CONSTRAINT ck_detalle_cantidad CHECK (cantidad > 0),
-    CONSTRAINT ck_detalle_precio CHECK (precio_unitario > 0)
+    CONSTRAINT ck_detalle_precio CHECK (precio_unitario > 0),
+    CONSTRAINT uq_detalle_venta_producto_talle UNIQUE (id_venta, id_producto, talle)
 );
+
+-- Bases creadas antes de agregar uq_detalle_venta_producto_talle: CREATE TABLE IF NOT EXISTS
+-- no modifica una tabla que ya existe, así que la restricción se agrega acá si todavía falta.
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'uq_detalle_venta_producto_talle') THEN
+        ALTER TABLE detalle_ventas
+            ADD CONSTRAINT uq_detalle_venta_producto_talle UNIQUE (id_venta, id_producto, talle);
+    END IF;
+END $$;

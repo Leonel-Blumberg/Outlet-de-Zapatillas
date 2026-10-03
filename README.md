@@ -12,7 +12,7 @@ Trabajo cuatrimestral de **Bases de Datos Aplicada**. Dashboard web para una cad
 ## Primera entrega
 
 - [x] Documento inicial con DER y diccionario de datos: [`docs/Primera_Entrega_Outlet_de_Zapatillas.docx`](docs/Primera_Entrega_Outlet_de_Zapatillas.docx)
-- [x] DER: [`docs/img/der.png`](docs/img/der.png) (Lucidchart) y su versión en texto [`docs/der.mmd`](docs/der.mmd) (Mermaid)
+- [x] DER: [`docs/img/der.png`](docs/img/der.png) (Lucidchart)
 - [x] Login y registro (frontend)
 - [x] Mockups de semaforización, drill down / drill up y tablas: [`docs/img/mockups/`](docs/img/mockups/) y [Claude Design](https://claude.ai/artifact/2vPc2G4DkwdM5ZDvJAzNo7)
 - [x] API de autenticación, conexión con PostgreSQL y siembra de usuarios (backend): [`server/`](server/)
