@@ -1,14 +1,15 @@
 -- =====================================================================
--- Outlet de Zapatillas · Siembra de usuarios para el login
+-- Outlet de Zapatillas - Siembra de usuarios para el login
 --
 -- Cuentas de prueba (solo para desarrollo):
 --   admin@outlet.com    / Admin1234     rol admin
 --   gerente@outlet.com  / Gerente1234   rol gerente
 --
 -- password_hash NO es la contraseña: es el hash generado con PasswordHasher<T>
--- de ASP.NET Core Identity (PBKDF2 · HMAC-SHA512 · sal aleatoria · 100.000
+-- de ASP.NET Core Identity (PBKDF2 - HMAC-SHA512 - sal aleatoria - 100.000
 -- iteraciones). Es el mismo algoritmo que usa el registro, así que el login
 -- funciona igual que con un usuario creado desde la aplicación.
+--
 -- Para agregar otro usuario, generar su hash con:
 --   cd server/OutletApi && dotnet run -- hash <contraseña>
 --

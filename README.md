@@ -2,12 +2,12 @@
 
 Trabajo cuatrimestral de **Bases de Datos Aplicada**. Dashboard web para una cadena de outlets de zapatillas con varias sucursales: ventas contra objetivo, stock por talle y actividad de clientes, con semaforización y drill down / drill up (Sucursal › Marca › Modelo › Detalle).
 
-| Capa | Tecnología | Carpeta |
-| --- | --- | --- |
-| Frontend | React 19 + Vite + React Router | [`client/`](client/) |
-| Backend | ASP.NET Core Web API (C#) | [`server/`](server/) |
-| Base de datos | PostgreSQL | [`server/db/`](server/db/) |
-| Documentación | Word, DER y mockups | [`docs/`](docs/) |
+| Capa          | Tecnología                     | Carpeta                    |
+| ------------- | ------------------------------ | -------------------------- |
+| Frontend      | React 19 + Vite + React Router | [`client/`](client/)       |
+| Backend       | ASP.NET Core Web API (C#)      | [`server/`](server/)       |
+| Base de datos | PostgreSQL                     | [`server/db/`](server/db/) |
+| Documentación | Word, DER y mockups            | [`docs/`](docs/)           |
 
 ## Primera entrega
 
@@ -48,11 +48,11 @@ Vite redirige todas las llamadas a `/api` al backend (`VITE_API_PROXY_TARGET`), 
 
 El frontend consume estos endpoints ([`client/src/api/auth.js`](client/src/api/auth.js)). Todas las respuestas son JSON.
 
-| Método | Ruta | Body | Respuesta OK | Errores |
-| --- | --- | --- | --- | --- |
-| `POST` | `/api/auth/login` | `{ "email", "password" }` | `200 { "token", "usuario" }` | `401 { "message": "Email o contraseña incorrectos." }`, `403 { "message" }` (cuenta deshabilitada), `400 { "message" }` |
-| `POST` | `/api/auth/register` | `{ "nombre", "apellido", "email", "password" }` | `201 { "token", "usuario" }` | `409 { "message": "Ya existe una cuenta con ese email." }`, `400 { "message" }` |
-| `GET` | `/api/auth/me` | Header `Authorization: Bearer <token>` | `200 usuario` | `401` |
+| Método | Ruta                 | Body                                            | Respuesta OK                 | Errores                                                                                                                 |
+| ------ | -------------------- | ----------------------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `POST` | `/api/auth/login`    | `{ "email", "password" }`                       | `200 { "token", "usuario" }` | `401 { "message": "Email o contraseña incorrectos." }`, `403 { "message" }` (cuenta deshabilitada), `400 { "message" }` |
+| `POST` | `/api/auth/register` | `{ "nombre", "apellido", "email", "password" }` | `201 { "token", "usuario" }` | `409 { "message": "Ya existe una cuenta con ese email." }`, `400 { "message" }`                                         |
+| `GET`  | `/api/auth/me`       | Header `Authorization: Bearer <token>`          | `200 usuario`                | `401`                                                                                                                   |
 
 `usuario` = `{ "id", "nombre", "apellido", "email", "rol" }`. Nunca se devuelve `password_hash`.
 
@@ -75,9 +75,9 @@ Reglas de validación del registro, iguales en el frontend y en el backend: nomb
 
 Cuentas de prueba que crea [`server/db/02_siembra_usuarios.sql`](server/db/02_siembra_usuarios.sql) con la contraseña ya hasheada:
 
-| Email | Contraseña | Rol |
-| --- | --- | --- |
-| `admin@outlet.com` | `Admin1234` | `admin` |
+| Email                | Contraseña    | Rol       |
+| -------------------- | ------------- | --------- |
+| `admin@outlet.com`   | `Admin1234`   | `admin`   |
 | `gerente@outlet.com` | `Gerente1234` | `gerente` |
 
 Son credenciales solo para desarrollo.
@@ -88,8 +88,8 @@ Tablas: `usuarios`, `sucursales`, `objetivos_venta`, `marcas`, `categorias`, `pr
 
 ## Semaforización
 
-| Indicador | Verde | Amarillo | Rojo |
-| --- | --- | --- | --- |
-| Cumplimiento del objetivo mensual por sucursal | ≥ 100% | 80% a 99,9% | < 80% |
-| Stock por producto · talle · sucursal | más del doble del mínimo | más del mínimo y hasta el doble | igual o menor al mínimo |
-| Actividad de clientes (días desde la última compra) | ≤ 30 | 31 a 90 | > 90 o sin compras |
+| Indicador                                           | Verde                    | Amarillo                        | Rojo                    |
+| --------------------------------------------------- | ------------------------ | ------------------------------- | ----------------------- |
+| Cumplimiento del objetivo mensual por sucursal      | ≥ 100%                   | 80% a 99,9%                     | < 80%                   |
+| Stock por producto · talle · sucursal               | más del doble del mínimo | más del mínimo y hasta el doble | igual o menor al mínimo |
+| Actividad de clientes (días desde la última compra) | ≤ 30                     | 31 a 90                         | > 90 o sin compras      |

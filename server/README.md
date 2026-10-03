@@ -36,11 +36,11 @@ Para no inicializar la base al arrancar, poner `Database:InicializarAlArrancar` 
 
 Los valores de desarrollo están en `appsettings.Development.json`:
 
-| Clave | Default | Uso |
-| --- | --- | --- |
-| `ConnectionStrings:Outlet` | `Host=localhost;Port=5432;Database=outlet_zapatillas;Username=postgres;Password=postgres` | Conexión a PostgreSQL |
-| `Jwt:Key` | clave de desarrollo | Firma de los tokens (32 caracteres o más) |
-| `Jwt:ExpiraHoras` | `8` | Duración de la sesión |
+| Clave                      | Default                                                                                   | Uso                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `ConnectionStrings:Outlet` | `Host=localhost;Port=5432;Database=outlet_zapatillas;Username=postgres;Password=postgres` | Conexión a PostgreSQL                     |
+| `Jwt:Key`                  | clave de desarrollo                                                                       | Firma de los tokens (32 caracteres o más) |
+| `Jwt:ExpiraHoras`          | `8`                                                                                       | Duración de la sesión                     |
 
 Si tu usuario `postgres` tiene otra contraseña, no cambies el archivo versionado: usá los secretos de usuario de .NET, que quedan fuera del repo.
 

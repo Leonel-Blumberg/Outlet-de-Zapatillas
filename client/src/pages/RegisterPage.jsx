@@ -1,55 +1,69 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import AuthLayout from '../components/AuthLayout'
-import FormField from '../components/FormField'
-import SubmitButton from '../components/SubmitButton'
-import { APP_NAME, PASSWORD_MIN_LENGTH } from '../config'
-import { compactErrors, validateEmail, validateName, validateNewPassword } from '../utils/validation'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import AuthLayout from "../components/AuthLayout";
+import FormField from "../components/FormField";
+import SubmitButton from "../components/SubmitButton";
+import { APP_NAME, PASSWORD_MIN_LENGTH } from "../config";
+import {
+  compactErrors,
+  validateEmail,
+  validateName,
+  validateNewPassword,
+} from "../utils/validation";
 
-const EMPTY_FORM = { nombre: '', apellido: '', email: '', password: '', confirmPassword: '' }
+const EMPTY_FORM = {
+  nombre: "",
+  apellido: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 export default function RegisterPage() {
-  const { register } = useAuth()
-  const navigate = useNavigate()
-  const [form, setForm] = useState(EMPTY_FORM)
-  const [errors, setErrors] = useState({})
-  const [serverError, setServerError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const { register } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setForm((f) => ({ ...f, [name]: value }))
-    setErrors((errs) => ({ ...errs, [name]: null }))
-    setServerError(null)
-  }
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+    setErrors((errs) => ({ ...errs, [name]: null }));
+    setServerError(null);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const validation = compactErrors({
-      nombre: validateName(form.nombre, 'nombre'),
-      apellido: validateName(form.apellido, 'apellido'),
+      nombre: validateName(form.nombre, "nombre"),
+      apellido: validateName(form.apellido, "apellido"),
       email: validateEmail(form.email),
       password: validateNewPassword(form.password),
-      confirmPassword: form.confirmPassword !== form.password ? 'Las contraseñas no coinciden.' : null,
-    })
-    setErrors(validation)
-    if (Object.keys(validation).length) return
+      confirmPassword:
+        form.confirmPassword !== form.password
+          ? "Las contraseñas no coinciden."
+          : null,
+    });
+    setErrors(validation);
+    if (Object.keys(validation).length) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
       await register({
         nombre: form.nombre.trim(),
         apellido: form.apellido.trim(),
         email: form.email.trim(),
         password: form.password,
-      })
-      navigate('/tablero', { replace: true })
+      });
+      navigate("/tablero", { replace: true });
     } catch (err) {
-      setServerError(err.message)
-      setLoading(false)
+      setServerError(err.message);
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <AuthLayout
@@ -119,8 +133,10 @@ export default function RegisterPage() {
           onChange={handleChange}
           error={errors.confirmPassword}
         />
-        <SubmitButton loading={loading}>{loading ? 'Creando cuenta…' : 'Crear cuenta'}</SubmitButton>
+        <SubmitButton loading={loading}>
+          {loading ? "Creando cuenta…" : "Crear cuenta"}
+        </SubmitButton>
       </form>
     </AuthLayout>
-  )
+  );
 }

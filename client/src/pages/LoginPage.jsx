@@ -1,45 +1,45 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import AuthLayout from '../components/AuthLayout'
-import FormField from '../components/FormField'
-import SubmitButton from '../components/SubmitButton'
-import { APP_NAME } from '../config'
-import { compactErrors, validateEmail } from '../utils/validation'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import AuthLayout from "../components/AuthLayout";
+import FormField from "../components/FormField";
+import SubmitButton from "../components/SubmitButton";
+import { APP_NAME } from "../config";
+import { compactErrors, validateEmail } from "../utils/validation";
 
 export default function LoginPage() {
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [errors, setErrors] = useState({})
-  const [serverError, setServerError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setForm((f) => ({ ...f, [name]: value }))
-    setErrors((errs) => ({ ...errs, [name]: null }))
-    setServerError(null)
-  }
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+    setErrors((errs) => ({ ...errs, [name]: null }));
+    setServerError(null);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const validation = compactErrors({
       email: validateEmail(form.email),
-      password: form.password ? null : 'Ingresá tu contraseña.',
-    })
-    setErrors(validation)
-    if (Object.keys(validation).length) return
+      password: form.password ? null : "Ingresá tu contraseña.",
+    });
+    setErrors(validation);
+    if (Object.keys(validation).length) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      await login({ email: form.email.trim(), password: form.password })
-      navigate('/tablero', { replace: true })
+      await login({ email: form.email.trim(), password: form.password });
+      navigate("/tablero", { replace: true });
     } catch (err) {
-      setServerError(err.message)
-      setLoading(false)
+      setServerError(err.message);
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <AuthLayout
@@ -78,8 +78,10 @@ export default function LoginPage() {
           onChange={handleChange}
           error={errors.password}
         />
-        <SubmitButton loading={loading}>{loading ? 'Ingresando…' : 'Ingresar'}</SubmitButton>
+        <SubmitButton loading={loading}>
+          {loading ? "Ingresando…" : "Ingresar"}
+        </SubmitButton>
       </form>
     </AuthLayout>
-  )
+  );
 }
