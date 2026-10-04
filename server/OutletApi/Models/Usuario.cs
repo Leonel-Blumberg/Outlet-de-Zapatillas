@@ -1,7 +1,6 @@
 namespace OutletApi.Models;
 
-// Fila de la tabla usuarios. Las columnas en snake_case se mapean solas
-// porque Dapper está configurado con MatchNamesWithUnderscores (ver Program.cs).
+// Fila de la tabla usuarios. UsuariosRepository la arma leyendo cada columna a mano.
 public class Usuario
 {
     public int IdUsuario { get; set; }

@@ -1,16 +1,16 @@
 # Backend · ASP.NET Core Web API
 
-API en C# (.NET 10) que valida el login contra PostgreSQL. El acceso a datos es con **Npgsql + Dapper**: las consultas son SQL escrito a mano y parametrizado, sin ORM.
+API en C# (.NET 10) que valida el login contra PostgreSQL. El acceso a datos es con **Npgsql** (ADO.NET), sin ORM: cada consulta es SQL escrito a mano y parametrizado, y las tablas se crean ejecutando los scripts SQL de `base de datos/` (no se usan migraciones ni `dotnet ef database update`).
 
 ```
 server/
-  db/
+  base de datos/
     01_crear_tablas.sql       tablas del DER con sus PK, FK, UNIQUE y CHECK
     02_siembra_usuarios.sql   cuentas de prueba con la contraseña hasheada
   OutletApi/
     Controllers/AuthController.cs   POST /api/auth/login, POST /api/auth/register, GET /api/auth/me
-    Data/UsuariosRepository.cs      consultas SQL sobre la tabla usuarios
-    Data/DatabaseInitializer.cs     crea la base y ejecuta los scripts de db/ al arrancar
+    Data/UsuariosRepository.cs      consultas SQL a mano sobre la tabla usuarios
+    Data/DatabaseInitializer.cs     crea la base y ejecuta los scripts de base de datos/ al arrancar
     Services/TokenService.cs        genera el token JWT
     Models/, Dtos/                  fila de usuarios y cuerpos de la API
     Program.cs                      configuración (conexión, JWT, PasswordHasher)
@@ -28,7 +28,7 @@ dotnet run
 Queda escuchando en http://localhost:5000. Al arrancar:
 
 1. Crea la base `outlet_zapatillas` si no existe.
-2. Ejecuta `db/01_crear_tablas.sql` y `db/02_siembra_usuarios.sql`, en orden y dentro de una transacción. Los dos scripts se pueden correr varias veces sin duplicar nada.
+2. Ejecuta `base de datos/01_crear_tablas.sql` y `base de datos/02_siembra_usuarios.sql`, en orden y dentro de una transacción. Los dos scripts se pueden correr varias veces sin duplicar nada.
 
 Para no inicializar la base al arrancar, poner `Database:InicializarAlArrancar` en `false`. Los scripts también se pueden ejecutar a mano desde psql o pgAdmin.
 
@@ -59,7 +59,7 @@ Para sembrar un usuario nuevo, generar su hash con:
 dotnet run -- hash MiContraseña123
 ```
 
-y copiarlo en `db/02_siembra_usuarios.sql`.
+y copiarlo en `base de datos/02_siembra_usuarios.sql`.
 
 ## Probar la API sin el frontend
 
