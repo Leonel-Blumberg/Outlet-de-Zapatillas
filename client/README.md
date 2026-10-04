@@ -8,7 +8,7 @@ Se comunica por HTTP/JSON con la API de **ASP.NET Core** que está en
 
 - **Pantallas**: inicio de sesión (**`/login`**), registro (**`/registro`**) y
   tablero (**`/tablero`**, pantalla de bienvenida).
-- **Rutas protegidas**: el tablero solo se ve con sesión; login y registro,
+- **Rutas protegidas**: el tablero solo se ve con sesión: login y registro,
   solo sin sesión. Cualquier otra ruta redirige a **`/tablero`** y, sin sesión,
   termina en **`/login`**.
 - **Validaciones** de formularios con las mismas reglas que el backend.
@@ -68,4 +68,6 @@ Para cambiar las variables sin tocar los archivos versionados, crear
 
 ## Autores
 
-**Leonel Blumberg** y **Luciano Migoni**
+**Leonel Maximiliano Blumberg**
+
+**Luciano Galo Migoni**

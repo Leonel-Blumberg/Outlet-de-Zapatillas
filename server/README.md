@@ -67,7 +67,7 @@ arrancar, crea la base **`outlet_zapatillas`** si no existe y ejecuta
 **`01_crear_tablas.sql`** y **`02_siembra_usuarios.sql`**, en orden y dentro de
 una transacción. Los dos scripts se pueden correr varias veces sin duplicar
 nada. Para no inicializar la base al arrancar, poner
-**`Database:InicializarAlArrancar`** en **`false`**; los scripts también se
+**`Database:InicializarAlArrancar`** en **`false`**: los scripts también se
 pueden ejecutar a mano desde psql o pgAdmin.
 
 Si el usuario **`postgres`** tiene otra contraseña, no cambiar el archivo
@@ -93,4 +93,6 @@ curl o Postman).
 
 ## Autores
 
-**Leonel Blumberg** y **Luciano Migoni**
+**Leonel Maximiliano Blumberg**
+
+**Luciano Galo Migoni**

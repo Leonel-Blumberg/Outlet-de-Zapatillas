@@ -99,4 +99,6 @@ Usuarios de prueba (solo para desarrollo):
 
 ## Autores
 
-**Leonel Blumberg** y **Luciano Migoni**
+**Leonel Maximiliano Blumberg**
+
+**Luciano Galo Migoni**
