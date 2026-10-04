@@ -24,11 +24,11 @@ src/
 
 ## Rutas
 
-| Ruta        | Acceso          | Pantalla                                    |
-| ----------- | --------------- | ------------------------------------------- |
-| `/login`    | solo sin sesión | Inicio de sesión                            |
-| `/registro` | solo sin sesión | Registro de usuario                         |
-| `/tablero`  | solo con sesión | Tablero (por ahora, pantalla de bienvenida) |
+| Ruta        | Acceso          | Pantalla                         |
+| ----------- | --------------- | -------------------------------- |
+| `/login`    | solo sin sesión | Inicio de sesión                 |
+| `/registro` | solo sin sesión | Registro de usuario              |
+| `/tablero`  | solo con sesión | Tablero (pantalla de bienvenida) |
 
 Cualquier otra ruta redirige a `/tablero` y, sin sesión, termina en `/login`.
 
