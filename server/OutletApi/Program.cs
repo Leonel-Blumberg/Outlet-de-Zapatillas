@@ -9,7 +9,7 @@ using OutletApi.Dtos;
 using OutletApi.Models;
 using OutletApi.Services;
 
-// Utilidad para la siembra: `dotnet run -- hash <contraseña>` imprime el hash que va en password_hash
+// Utilidad para la siembra: "dotnet run -- hash <contraseña>" imprime el hash que va en password_hash
 if (args is ["hash", var plano])
 {
     Console.WriteLine(new PasswordHasher<Usuario>().HashPassword(new Usuario(), plano));

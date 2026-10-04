@@ -3,7 +3,7 @@ using Npgsql;
 namespace OutletApi.Data;
 
 // Al arrancar la API: crea la base si no existe y ejecuta, en orden, los scripts de server/base de datos
-// (creación de tablas y siembra). Los scripts son idempotentes, así que se pueden correr siempre.
+// (creación de tablas y siembra). Los scripts pueden correr siempre.
 public static class DatabaseInitializer
 {
     public static async Task InicializarAsync(string connectionString, ILogger logger)

@@ -88,7 +88,7 @@ public partial class AuthController(
             new AuthResponse(tokens.Crear(usuario), UsuarioDto.From(usuario)));
     }
 
-    // GET /api/auth/me — valida el token guardado en el navegador y devuelve el usuario
+    // GET /api/auth/me - valida el token guardado en el navegador y devuelve el usuario
     [Authorize]
     [HttpGet("me")]
     public async Task<IActionResult> Me()

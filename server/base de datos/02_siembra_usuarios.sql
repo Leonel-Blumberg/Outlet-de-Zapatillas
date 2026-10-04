@@ -1,4 +1,3 @@
--- =====================================================================
 -- Outlet de Zapatillas - Siembra de usuarios para el login
 --
 -- Cuentas de prueba (solo para desarrollo):
@@ -15,7 +14,6 @@
 --
 -- ON CONFLICT evita duplicar las cuentas si el script se ejecuta de nuevo.
 -- El gerente queda sin sucursal hasta que se carguen las sucursales.
--- =====================================================================
 
 INSERT INTO usuarios (nombre, apellido, email, password_hash, rol) VALUES
     ('Admin',   'Outlet', 'admin@outlet.com',

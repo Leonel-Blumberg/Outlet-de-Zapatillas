@@ -1,12 +1,9 @@
--- =====================================================================
 -- Outlet de Zapatillas - Creación de tablas (PostgreSQL)
--- Modelo canónico según el DER (docs/img/der.png) y el diccionario de datos
--- (en la sección 5 del documento de la primera entrega).
+-- Modelo canónico según el DER (docs/img/der.png) y el diccionario de datos.
 --
 -- Se puede ejecutar varias veces ya que solo crea lo que todavía no existe.
 -- La API lo ejecuta automáticamente al arrancar y también se puede correr
 -- a mano desde psql o pgAdmin sobre la base outlet_zapatillas.
--- =====================================================================
 
 -- Locales del outlet
 CREATE TABLE IF NOT EXISTS sucursales (

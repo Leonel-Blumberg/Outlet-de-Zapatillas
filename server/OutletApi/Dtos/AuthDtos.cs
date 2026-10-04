@@ -2,7 +2,7 @@ using OutletApi.Models;
 
 namespace OutletApi.Dtos;
 
-// Cuerpos y respuestas de /api/auth (contrato en el README principal).
+// Cuerpos y respuestas de /api/auth.
 // Los campos de entrada son nullables para poder responder un 400 con mensaje propio.
 
 public record LoginRequest(string? Email, string? Password);
