@@ -14,7 +14,7 @@ Trabajo cuatrimestral de **Bases de Datos Aplicada**. Dashboard web para una cad
 - [x] Documento inicial con DER y diccionario de datos: [`docs/Entrega 1 - Leonel Blumberg y Luciano Migoni.docx`](docs/Entrega%201%20-%20Leonel%20Blumberg%20y%20Luciano%20Migoni.docx)
 - [x] DER: [`docs/img/der.png`](docs/img/der.png) (Lucidchart)
 - [x] Login y registro (frontend)
-- [x] Mockups de semaforización, drill down / drill up y tablas: [`docs/img/mockups/`](docs/img/mockups/) y [Claude Design](https://claude.ai/artifact/2vPc2G4DkwdM5ZDvJAzNo7)
+- [x] Mockups de semaforización, drill down / drill up y tablas (Figma): [`docs/img/mockups/`](docs/img/mockups/)
 - [x] API de autenticación, conexión con PostgreSQL y siembra de usuarios (backend): [`server/`](server/)
 
 ![DER](docs/img/der.png)

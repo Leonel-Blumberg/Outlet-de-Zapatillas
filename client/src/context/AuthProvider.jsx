@@ -5,10 +5,10 @@ import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  // Solo hay que esperar la verificación si quedo un token guardado
+  // Solo hay que esperar la verificación si quedó un token guardado
   const [loading, setLoading] = useState(() => Boolean(tokenStorage.get()));
 
-  // Al recargar la pagina se valida el token guardado contra el backend
+  // Al recargar la página se valida el token guardado contra el backend
   useEffect(() => {
     if (!tokenStorage.get()) return;
     meRequest()
