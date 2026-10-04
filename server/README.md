@@ -72,9 +72,13 @@ pueden ejecutar a mano desde psql o pgAdmin.
 
 Si el usuario **`postgres`** tiene otra contraseña, no cambiar el archivo
 versionado: usar los secretos de usuario de .NET, que quedan fuera del
-repositorio. Para eso, ejecutar **`dotnet user-secrets init`** y luego
-**`dotnet user-secrets set "ConnectionStrings:Outlet" "<cadena de conexión>"`**
-con la contraseña correcta.
+repositorio. Para eso, dentro de **`OutletApi`**, ejecutar
+**`dotnet user-secrets init`** y luego el siguiente comando, reemplazando
+**`TU_CONTRASEÑA`** por la contraseña real:
+
+**`dotnet user-secrets set "ConnectionStrings:Outlet" "Host=localhost;Port=5432;Database=outlet_zapatillas;Username=postgres;Password=TU_CONTRASEÑA"`**
+
+Con **`dotnet user-secrets list`** se puede verificar el valor guardado.
 
 Para sembrar un usuario nuevo, generar el hash de su contraseña con
 **`dotnet run -- hash <contraseña>`** y copiarlo en
