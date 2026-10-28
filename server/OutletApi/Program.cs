@@ -23,6 +23,10 @@ var connectionString = builder.Configuration.GetConnectionString("Outlet")
     ?? throw new InvalidOperationException("Falta ConnectionStrings:Outlet en la configuración.");
 builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
 builder.Services.AddScoped<UsuariosRepository>();
+builder.Services.AddScoped<CatalogosRepository>();
+builder.Services.AddScoped<VentasRepository>();
+builder.Services.AddScoped<StockRepository>();
+builder.Services.AddScoped<ClientesRepository>();
 
 // ---- Contraseñas: PBKDF2 con HMAC-SHA512, sal aleatoria y 100.000 iteraciones ----
 builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
@@ -45,6 +49,17 @@ builder.Services
             ValidAudience = jwt.Audience,
             IssuerSigningKey = jwt.SigningKey(),
             RoleClaimType = "rol",
+        };
+        // Sin token válido se responde 401 con { message }, igual que el resto de los errores
+        o.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsJsonAsync(
+                    new ErrorResponse("Tu sesión expiró. Volvé a iniciar sesión."));
+            },
         };
     });
 builder.Services.AddAuthorization();

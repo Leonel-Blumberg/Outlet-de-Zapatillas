@@ -1,14 +1,14 @@
 # Contrato de la API del tablero
 
 Este documento define los endpoints que el **frontend** (`client/`) consume y
-que el **backend** (`server/`) tiene que implementar. El front está hecho contra
-este contrato: si el backend responde exactamente esto, no hace falta tocar
-nada del lado del cliente.
+que el **backend** (`server/`) implementa. Si se cambia un endpoint, hay que
+cambiarlo en los dos lados y en este documento.
 
-Mientras el backend no esté listo, el front puede funcionar con datos de prueba
-que respetan este mismo contrato (`npm run dev:mocks`, ver `client/README.md`).
-La implementación de esos datos de prueba está en `client/src/api/mocks/` y
-sirve como referencia para comparar respuestas.
+El front también puede funcionar sin el backend, con datos de prueba que
+respetan este mismo contrato (`npm run dev:mocks`, ver `client/README.md`). Esos
+datos están en `client/src/api/mocks/` y son los mismos que carga
+`server/base de datos/03_siembra_datos.sql`, así que la API real y el modo de
+prueba devuelven las mismas respuestas.
 
 ## Convenciones
 
@@ -40,8 +40,10 @@ sirve como referencia para comparar respuestas.
 
 ## Semáforos
 
-Los estados de los semáforos los calcula el **backend en SQL** (con `CASE`). El
-front solo los muestra con su color y su texto. Valores posibles:
+Los estados de los semáforos los calcula la **base de datos**, con las funciones
+`estado_objetivo`, `estado_stock` y `estado_cliente` de
+`server/base de datos/04_vistas_y_funciones.sql`. El front solo los muestra con
+su color y su texto. Valores posibles:
 
 | Semáforo | Campo | Verde | Amarillo | Rojo |
 |---|---|---|---|---|
@@ -54,7 +56,7 @@ front solo los muestra con su color y su texto. Valores posibles:
 - El **estado de stock de un modelo** en una sucursal (nivel 3 del drill down)
   es el peor estado entre todos sus talles en esa sucursal.
 
-Ejemplos de las expresiones SQL:
+Las expresiones que usan esas funciones:
 
 ```sql
 -- Objetivo
@@ -486,16 +488,17 @@ Pantalla "Detalle de ventas": una fila por venta (ticket).
 - `totales`: de **todas** las ventas que cumplen el filtro, no solo de la
   página. El ticket promedio (`importe / ventas`) lo calcula el front.
 
-## Checklist para el backend
+## Estado de la implementación
 
-- [ ] Script `server/base de datos/03_siembra_datos.sql` con datos de todas las
-      tablas: al menos dos meses de ventas, los tres colores de cada semáforo,
-      `ventas.total` igual a la suma de sus subtotales y que se pueda ejecutar
-      varias veces sin duplicar (`ON CONFLICT`).
-- [ ] Endpoints 1 a 9 con `[Authorize]` y consultas SQL parametrizadas.
-- [ ] Estados de los semáforos calculados en SQL con los umbrales de la tabla
-      de [Semáforos](#semáforos).
-- [ ] Días de los clientes contra la [fecha de referencia](#fecha-de-referencia),
+- [x] Script `server/base de datos/03_siembra_datos.sql` con datos de todas las
+      tablas: seis meses de ventas, los tres colores de cada semáforo,
+      `ventas.total` igual a la suma de sus subtotales y ejecutable varias veces
+      sin duplicar (`ON CONFLICT DO NOTHING`).
+- [x] Endpoints 1 a 9 con `[Authorize]` y consultas SQL parametrizadas.
+- [x] Estados de los semáforos calculados en SQL (funciones de
+      `04_vistas_y_funciones.sql`) con los umbrales de la tabla de
+      [Semáforos](#semáforos).
+- [x] Días de los clientes contra la [fecha de referencia](#fecha-de-referencia),
       no contra `now()`.
-- [ ] `400` y `404` con `{ "message" }` como en la autenticación.
-- [ ] `server/README.md` actualizado con los endpoints nuevos.
+- [x] `400`, `401` y `404` con `{ "message" }` como en la autenticación.
+- [x] `server/README.md` actualizado con los endpoints nuevos.

@@ -46,11 +46,11 @@ const PESO_DIA_SEMANA = [0.9, 0.7, 0.75, 0.8, 0.9, 1.15, 1.4];
 // ---- Catálogos ----
 
 export const sucursales = [
-  { id: 1, nombre: "Palermo", direccion: "Av. Santa Fe 3253", ciudad: "CABA", provincia: "CABA", peso: 0.3 },
-  { id: 2, nombre: "Unicenter", direccion: "Paraná 3745", ciudad: "Martínez", provincia: "Buenos Aires", peso: 0.255 },
-  { id: 3, nombre: "Belgrano", direccion: "Av. Cabildo 2280", ciudad: "CABA", provincia: "CABA", peso: 0.2 },
-  { id: 4, nombre: "Rosario Centro", direccion: "Córdoba 1452", ciudad: "Rosario", provincia: "Santa Fe", peso: 0.145 },
-  { id: 5, nombre: "Córdoba Nuevocentro", direccion: "Duarte Quirós 1400", ciudad: "Córdoba", provincia: "Córdoba", peso: 0.1 },
+  { id: 1, nombre: "Palermo", direccion: "Av. Santa Fe 3253", ciudad: "CABA", provincia: "CABA", telefono: "011 4831-2200", fechaApertura: "2019-03-15", peso: 0.3 },
+  { id: 2, nombre: "Unicenter", direccion: "Paraná 3745", ciudad: "Martínez", provincia: "Buenos Aires", telefono: "011 4733-1180", fechaApertura: "2020-08-01", peso: 0.255 },
+  { id: 3, nombre: "Belgrano", direccion: "Av. Cabildo 2280", ciudad: "CABA", provincia: "CABA", telefono: "011 4784-5600", fechaApertura: "2021-05-10", peso: 0.2 },
+  { id: 4, nombre: "Rosario Centro", direccion: "Córdoba 1452", ciudad: "Rosario", provincia: "Santa Fe", telefono: "0341 425-3390", fechaApertura: "2022-04-22", peso: 0.145 },
+  { id: 5, nombre: "Córdoba Nuevocentro", direccion: "Duarte Quirós 1400", ciudad: "Córdoba", provincia: "Córdoba", telefono: "0351 488-7710", fechaApertura: "2023-09-05", peso: 0.1 },
 ];
 
 export const marcas = [

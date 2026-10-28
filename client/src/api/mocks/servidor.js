@@ -71,6 +71,9 @@ function estadoCliente(dias) {
 
 const SEVERIDAD_STOCK = { critico: 0, atencion: 1, normal: 2 };
 
+// ORDER BY ventas DESC, nombre
+const porVentasYNombre = (a, b) => b.ventas - a.ventas || a.nombre.localeCompare(b.nombre, "es");
+
 // ---- Datos derivados de cada cliente (lo que el backend calcula con GROUP BY) ----
 
 const hace12Meses = (() => {
@@ -257,7 +260,7 @@ function resumen(q) {
       .map(({ id, nombre, ciudad, provincia, ventas, objetivo, cumplimiento, estado }) => ({
         id, nombre, ciudad, provincia, ventas, objetivo, cumplimiento, estado,
       }))
-      .sort((a, b) => b.ventas - a.ventas),
+      .sort(porVentasYNombre),
     stock: conteoStock,
     clientes: conteoClientes,
     ventasPorDia: [...porDia.values()].sort((a, b) => a.fecha.localeCompare(b.fecha)),
@@ -266,7 +269,7 @@ function resumen(q) {
 
 function ventasPorSucursal(q) {
   const periodo = leerPeriodo(q);
-  const items = db.sucursales.map((s) => filaSucursal(s, periodo)).sort((a, b) => b.ventas - a.ventas);
+  const items = db.sucursales.map((s) => filaSucursal(s, periodo)).sort(porVentasYNombre);
   return { items, totales: totalizar(items) };
 }
 
@@ -298,7 +301,7 @@ function ventasPorMarca(idSucursal, q) {
         pares: g.pares,
         ventasAnterior: anterior.get(idMarca)?.ventas ?? 0,
       }))
-      .sort((a, b) => b.ventas - a.ventas),
+      .sort(porVentasYNombre),
   };
 }
 
@@ -334,7 +337,7 @@ function ventasPorModelo(idSucursal, idMarca, q) {
           ...stockDeProducto(sucursal.id, p.id),
         };
       })
-      .sort((a, b) => b.ventas - a.ventas),
+      .sort((a, b) => b.ventas - a.ventas || a.modelo.localeCompare(b.modelo, "es")),
   };
 }
 

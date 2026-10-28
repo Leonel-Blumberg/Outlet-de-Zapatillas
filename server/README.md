@@ -1,8 +1,9 @@
 # Backend del tablero de control
 
 API web creada con **ASP.NET Core** (C#, .NET 10) que valida el inicio de
-sesión contra **PostgreSQL**. El acceso a datos es con **Npgsql** (ADO.NET), sin
-ORM: cada consulta es SQL escrito a mano y parametrizado.
+sesión contra **PostgreSQL** y le entrega al tablero todos sus datos. El acceso
+a datos es con **Npgsql** (ADO.NET), sin ORM: cada consulta es SQL escrito a
+mano y parametrizado.
 
 ## Contenido
 
@@ -15,10 +16,31 @@ ORM: cada consulta es SQL escrito a mano y parametrizado.
     `409` (ya existe una cuenta con ese email).
   - **`GET /api/auth/me`**: con el header `Authorization: Bearer <token>`
     devuelve el usuario. Sin un token válido responde `401`.
+- **Endpoints del tablero**, todos con `Authorization: Bearer <token>`. Los
+  parámetros y el JSON de cada uno están en **`docs/contrato-api.md`**:
+  - **`GET /api/tablero/catalogos`**: meses con ventas, sucursales, marcas y
+    fecha de referencia.
+  - **`GET /api/tablero/resumen?anio&mes&idSucursal`**: indicadores del mes,
+    cumplimiento por sucursal, conteos de stock y clientes por estado y ventas
+    por día.
+  - **`GET /api/ventas/sucursales?anio&mes`**: drill down, nivel 1.
+  - **`GET /api/ventas/sucursales/{idSucursal}/marcas?anio&mes`**: nivel 2.
+  - **`GET /api/ventas/sucursales/{idSucursal}/marcas/{idMarca}/modelos?anio&mes`**:
+    nivel 3.
+  - **`GET /api/ventas/sucursales/{idSucursal}/productos/{idProducto}?anio&mes&pagina&porPagina`**:
+    nivel 4.
+  - **`GET /api/stock?busqueda&idSucursal&idMarca&estado&pagina&porPagina`**.
+  - **`GET /api/clientes?busqueda&idSucursal&estado&pagina&porPagina`**.
+  - **`GET /api/ventas?desde&hasta&idSucursal&medioPago&busqueda&orden&pagina&porPagina`**.
 - **Usuario** que devuelve la API: `{ id, nombre, apellido, email, rol }`. Nunca
   se devuelve el **`password_hash`**.
 - **Errores** con el formato `{ message }`, en castellano, para que el frontend
-  los muestre tal cual.
+  los muestre tal cual: `400` (parámetros inválidos), `401` (sin token o token
+  vencido) y `404` (sucursal, marca o producto inexistente).
+- **Semáforos** calculados en la base de datos con las funciones
+  **`estado_objetivo`**, **`estado_stock`** y **`estado_cliente`**. Los días de
+  los clientes se cuentan contra la fecha de referencia (el día siguiente a la
+  última venta), no contra la fecha actual.
 - **Contraseñas** guardadas con **`PasswordHasher<Usuario>`** de ASP.NET Core
   Identity: PBKDF2 con HMAC-SHA512, sal aleatoria de 128 bits y 100.000
   iteraciones. La contraseña nunca se guarda ni se devuelve.
@@ -30,13 +52,25 @@ ORM: cada consulta es SQL escrito a mano y parametrizado.
   - **`01_crear_tablas.sql`**: tablas del DER con sus PK, FK, UNIQUE y CHECK.
   - **`02_siembra_usuarios.sql`**: cuentas de prueba con la contraseña
     hasheada.
+  - **`03_siembra_datos.sql`**: datos de prueba con `INSERT` (5 sucursales, 26
+    productos, 1.430 registros de stock, 2.800 clientes, 30 objetivos, 9.308
+    ventas y 12.386 líneas de detalle, de abril a septiembre de 2026). Se genera
+    con **`npm run generar-siembra`** dentro de **`client`**, a partir de los
+    datos de prueba del front, así los dos modos muestran lo mismo.
+  - **`04_vistas_y_funciones.sql`**: funciones de los semáforos y las vistas
+    **`vista_stock`** y **`vista_actividad_clientes`**.
 - Estructura de **`OutletApi/`**:
-  - **`Controllers/AuthController.cs`**: endpoints de login, registro y sesión.
-  - **`Data/UsuariosRepository.cs`**: consultas SQL sobre la tabla usuarios.
-  - **`Data/DatabaseInitializer.cs`**: crea la base y ejecuta los scripts al
-    arrancar.
+  - **`Controllers/`**: **`AuthController`** (login, registro y sesión),
+    **`TableroController`** (catálogos y resumen), **`VentasController`** (drill
+    down y detalle de ventas), **`StockController`** y **`ClientesController`**.
+  - **`Data/`**: un repositorio por tema con sus consultas SQL
+    (**`UsuariosRepository`**, **`CatalogosRepository`**, **`VentasRepository`**,
+    **`StockRepository`** y **`ClientesRepository`**), **`SqlExtensions`**
+    (parámetros y lectura de columnas) y **`DatabaseInitializer`** (crea la base
+    y ejecuta los scripts al arrancar).
   - **`Services/TokenService.cs`**: genera el token JWT.
-  - **`Models/`** y **`Dtos/`**: fila de usuarios y cuerpos de la API.
+  - **`Models/`**: fila de usuarios, período y paginación de las consultas.
+  - **`Dtos/`**: cuerpos y respuestas de la API.
   - **`Program.cs`**: configuración de la conexión, el JWT y el
     PasswordHasher.
 
@@ -63,12 +97,11 @@ Valores de desarrollo, en **`OutletApi/appsettings.Development.json`**:
 - API: **`http://localhost:5000`**
 
 Para levantar la API, ejecutar **`dotnet run`** dentro de **`OutletApi`**. Al
-arrancar, crea la base **`outlet_zapatillas`** si no existe y ejecuta
-**`01_crear_tablas.sql`** y **`02_siembra_usuarios.sql`**, en orden y dentro de
-una transacción. Los dos scripts se pueden correr varias veces sin duplicar
-nada. Para no inicializar la base al arrancar, poner
-**`Database:InicializarAlArrancar`** en **`false`**: los scripts también se
-pueden ejecutar a mano desde psql o pgAdmin.
+arrancar, crea la base **`outlet_zapatillas`** si no existe y ejecuta los cuatro
+scripts de **`base de datos/`**, en orden y dentro de una transacción. Los
+scripts se pueden correr varias veces sin duplicar nada. Para no inicializar la
+base al arrancar, poner **`Database:InicializarAlArrancar`** en **`false`**: los
+scripts también se pueden ejecutar a mano desde psql o pgAdmin.
 
 Si el usuario **`postgres`** tiene otra contraseña, no cambiar el archivo
 versionado: usar los secretos de usuario de .NET, que quedan fuera del
@@ -87,7 +120,8 @@ Para sembrar un usuario nuevo, generar el hash de su contraseña con
 Para probar la API sin el frontend, enviar un **`POST`** a
 **`http://localhost:5000/api/auth/login`** con el cuerpo
 **`{"email":"admin@outlet.com","password":"Admin1234"}`** (por ejemplo, con
-curl o Postman).
+curl o Postman) y usar el **`token`** que devuelve en el header
+**`Authorization: Bearer <token>`** de los endpoints del tablero.
 
 ## Capturas
 
