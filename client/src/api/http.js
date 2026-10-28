@@ -1,6 +1,9 @@
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL, USE_MOCKS } from "../config";
 
 const TOKEN_KEY = "outlet.token";
+
+// Evento que se dispara cuando el backend rechaza el token (sesión vencida)
+export const SESION_EXPIRADA = "outlet:sesion-expirada";
 
 export const tokenStorage = {
   get: () => sessionStorage.getItem(TOKEN_KEY),
@@ -15,15 +18,26 @@ export class ApiError extends Error {
   }
 }
 
-// Envuelve fetch: agrega el token JWT y traduce los errores del backend a mensajes legibles
-export async function request(path, { method = "GET", body } = {}) {
+// Arma "?anio=2026&mes=9" salteando los parámetros vacíos
+function queryString(params) {
+  if (!params) return "";
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== "")
+      query.set(key, value);
+  }
+  const texto = query.toString();
+  return texto ? `?${texto}` : "";
+}
+
+async function fetchBackend(url, method, body) {
   const headers = { "Content-Type": "application/json" };
   const token = tokenStorage.get();
   if (token) headers.Authorization = `Bearer ${token}`;
 
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(`${API_BASE_URL}${url}`, {
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
@@ -36,16 +50,36 @@ export async function request(path, { method = "GET", body } = {}) {
   }
 
   const data = await response.json().catch(() => null);
+  return { status: response.status, data };
+}
 
-  if (!response.ok) {
-    const message =
-      data?.message ||
-      data?.title ||
-      (response.status === 401
+// Con VITE_USE_MOCKS=true las respuestas salen de src/api/mocks (mismo contrato que el backend)
+async function fetchMock(url, method, body) {
+  const { responderMock } = await import("./mocks/servidor.js");
+  return responderMock({ url, method, body, token: tokenStorage.get() });
+}
+
+// Envuelve fetch: agrega el token JWT y traduce los errores del backend a mensajes legibles
+export async function request(path, { method = "GET", body, params } = {}) {
+  const url = `${path}${queryString(params)}`;
+  const { status, data } = USE_MOCKS
+    ? await fetchMock(url, method, body)
+    : await fetchBackend(url, method, body);
+
+  if (status >= 200 && status < 300) return data;
+
+  // En el tablero un 401 significa que el token venció: se cierra la sesión
+  const esAuth = path.startsWith("/auth/");
+  if (status === 401 && !esAuth)
+    window.dispatchEvent(new Event(SESION_EXPIRADA));
+
+  const message =
+    data?.message ||
+    data?.title ||
+    (status === 401
+      ? esAuth
         ? "Email o contraseña incorrectos."
-        : "Ocurrió un error inesperado.");
-    throw new ApiError(message, response.status);
-  }
-
-  return data;
+        : "Tu sesión expiró. Volvé a iniciar sesión."
+      : "Ocurrió un error inesperado.");
+  throw new ApiError(message, status);
 }
