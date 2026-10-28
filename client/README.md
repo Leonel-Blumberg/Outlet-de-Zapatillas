@@ -2,36 +2,57 @@
 
 Interfaz web del tablero creada con **React 19**, **Vite** y **React Router**.
 Se comunica por HTTP/JSON con la API de **ASP.NET Core** que está en
-**`server/`**.
+**`server/`**, según el contrato de **`docs/contrato-api.md`**.
 
 ## Contenido
 
-- **Pantallas**: inicio de sesión (**`/login`**), registro (**`/registro`**) y
-  tablero (**`/tablero`**, pantalla de bienvenida).
-- **Rutas protegidas**: el tablero solo se ve con sesión: login y registro,
-  solo sin sesión. Cualquier otra ruta redirige a **`/tablero`** y, sin sesión,
-  termina en **`/login`**.
+- **Pantallas**:
+  - Inicio de sesión (**`/login`**) y registro (**`/registro`**).
+  - **Resumen** (**`/resumen`**): indicadores del mes con su variación,
+    semáforo de cumplimiento por sucursal, estado del stock y de los clientes y
+    gráfico de ventas por día. Se filtra por mes y por sucursal.
+  - **Ventas por sucursal**, con drill down y drill up en cuatro niveles:
+    **`/ventas`** (sucursales), **`/ventas/:idSucursal`** (marcas),
+    **`/ventas/:idSucursal/:idMarca`** (modelos) y
+    **`/ventas/:idSucursal/:idMarca/:idProducto`** (detalle de cada venta). Cada
+    nivel tiene su URL, así que también funciona el botón atrás del navegador.
+  - **Stock** (**`/stock`**), **Clientes** (**`/clientes`**) y **Detalle de
+    ventas** (**`/detalle-ventas`**): tablas con filtros, búsqueda y paginación.
+- **Semáforos**: el estado lo calcula el backend en SQL. El front lo muestra
+  siempre con su texto y con la referencia de cada color en la misma pantalla.
+- **Rutas protegidas**: el tablero solo se ve con sesión; login y registro,
+  solo sin sesión. Cualquier otra ruta redirige a **`/resumen`** y, sin sesión,
+  termina en **`/login`**. Si el backend rechaza el token, se cierra la sesión.
 - **Validaciones** de formularios con las mismas reglas que el backend.
 - Estructura de **`src/`**:
-  - **`api/`**: llamadas HTTP (**`http.js`**) y endpoints de autenticación
-    (**`auth.js`**).
-  - **`components/`**: layout de login y registro, campos de formulario y rutas
-    protegidas.
-  - **`context/`**: sesión del usuario con **`AuthProvider`** (login, registro y
-    logout) y el hook **`useAuth`**.
-  - **`pages/`**: **`LoginPage`**, **`RegisterPage`** y **`DashboardPage`**.
+  - **`api/`**: llamadas HTTP (**`http.js`**), endpoints de autenticación
+    (**`auth.js`**) y del tablero (**`tablero.js`**).
+  - **`api/mocks/`**: datos de prueba y un backend simulado con los mismos
+    endpoints del contrato (solo se usan con **`npm run dev:mocks`**).
+  - **`components/`**: barra lateral (**`AppLayout`**), semáforo y sus
+    referencias, gráficos, filtros, paginación, navegación del drill down y
+    piezas comunes del tablero.
+  - **`context/`**: sesión del usuario (**`AuthProvider`**, **`useAuth`**) y
+    datos compartidos del tablero (**`TableroProvider`**, **`useTablero`**):
+    sucursales, marcas, meses con ventas y mes elegido.
+  - **`hooks/`**: **`useApi`** (pide datos a la API y conserva los anteriores
+    mientras recarga) y **`useAncho`**.
+  - **`pages/`**: una página por pantalla; los cuatro niveles del drill down
+    están en **`pages/ventas/`**.
   - **`styles/`**: estilos globales y tokens de color.
-  - **`utils/`**: validaciones de formularios.
-  - **`config.js`**: nombre de la app, URL de la API y límites de los
-    formularios.
+  - **`utils/`**: formato de números, importes y fechas (**`format.js`**),
+    configuración de los semáforos (**`semaforo.js`**) y validaciones.
+  - **`config.js`**: nombre de la app, URL de la API, modo de prueba y filas por
+    página.
+- **`scripts/`**: capturas de pantalla y PDF de la entrega final.
 
 ## Requisitos previos
 
 Para ejecutar el frontend se necesita:
 
 - **Node.js 20** o superior.
-- El **backend** corriendo (ver **`server/README.md`**), porque el login y el
-  registro usan su API.
+- El **backend** corriendo (ver **`server/README.md`**), salvo que se use el
+  modo de prueba (**`npm run dev:mocks`**).
 
 ## Configuración local
 
@@ -40,31 +61,54 @@ Para ejecutar el frontend se necesita:
   desarrollo. Por defecto, **`http://localhost:5000`**.
 - **`VITE_API_URL`**: prefijo de la API para builds de producción. Por defecto,
   **`/api`**.
+- **`VITE_USE_MOCKS`**: con **`true`**, el front usa los datos de prueba de
+  **`src/api/mocks`** en lugar del backend. Lo activa **`npm run dev:mocks`**
+  (archivo **`.env.mocks`**).
 
-Para instalar las dependencias, ejecutar **`npm install`**. Luego, con
-**`npm run dev`** se levanta el servidor de desarrollo, con **`npm run build`**
-se genera la versión de producción y con **`npm run lint`** se revisa el código.
+Para instalar las dependencias, ejecutar **`npm install`**. Luego:
+
+- **`npm run dev`**: servidor de desarrollo contra el backend.
+- **`npm run dev:mocks`**: servidor de desarrollo con datos de prueba, sin
+  backend. Se muestra un aviso arriba de cada pantalla.
+- **`npm run build`**: versión de producción.
+- **`npm run lint`**: revisión del código.
 
 Para cambiar las variables sin tocar los archivos versionados, crear
 **`.env.development.local`** (se puede copiar **`.env.example`**).
+
+## Documento de la entrega final
+
+El documento está en **`docs/entrega-2/documento.html`** y usa las capturas de
+**`docs/img/entrega2/`**. Para regenerarlo:
+
+1. La primera vez, instalar el navegador con
+   **`npx playwright install chromium`**.
+2. Con el front corriendo (**`npm run dev`** y el backend levantado), ejecutar
+   **`npm run capturas`** en otra terminal. Saca de nuevo las capturas de todas
+   las pantallas.
+3. Ejecutar **`npm run pdf`**. Genera
+   **`docs/Entrega 2 - Leonel Blumberg y Luciano Migoni.pdf`**.
+
+También se puede abrir **`documento.html`** en Chrome e imprimirlo como PDF
+(tamaño A4).
 
 ## Capturas
 
 **Inicio de sesión**
 
-![Inicio de sesión](../docs/img/app-login.png)
-
-**Registro de usuario**
-
-![Registro de usuario](../docs/img/app-registro.png)
+![Inicio de sesión](../docs/img/entrega2/01-login.png)
 
 **Inicio de sesión con credenciales incorrectas**
 
-![Inicio de sesión con credenciales incorrectas](../docs/img/app-login-error.png)
+![Inicio de sesión con credenciales incorrectas](../docs/img/entrega2/02-login-error.png)
 
-**Tablero luego de iniciar sesión**
+**Resumen del mes**
 
-![Tablero luego de iniciar sesión](../docs/img/app-tablero.png)
+![Resumen del mes](../docs/img/entrega2/04-resumen.png)
+
+**Drill down, nivel 4: detalle de ventas del modelo**
+
+![Detalle de ventas del modelo](../docs/img/entrega2/09-nivel4-detalle.png)
 
 ## Autores
 

@@ -34,7 +34,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login({ email: form.email.trim(), password: form.password });
-      navigate("/tablero", { replace: true });
+      navigate("/resumen", { replace: true });
     } catch (err) {
       setServerError(err.message);
       setLoading(false);

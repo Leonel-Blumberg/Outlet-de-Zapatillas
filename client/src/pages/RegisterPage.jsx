@@ -58,7 +58,7 @@ export default function RegisterPage() {
         email: form.email.trim(),
         password: form.password,
       });
-      navigate("/tablero", { replace: true });
+      navigate("/resumen", { replace: true });
     } catch (err) {
       setServerError(err.message);
       setLoading(false);

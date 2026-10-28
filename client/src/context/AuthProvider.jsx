@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { loginRequest, meRequest, registerRequest } from "../api/auth";
-import { tokenStorage } from "../api/http";
+import { SESION_EXPIRADA, tokenStorage } from "../api/http";
 import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }) {
@@ -35,6 +35,12 @@ export function AuthProvider({ children }) {
     tokenStorage.clear();
     setUser(null);
   }, []);
+
+  // Si el backend rechaza el token mientras se usa el tablero, se vuelve al login
+  useEffect(() => {
+    window.addEventListener(SESION_EXPIRADA, logout);
+    return () => window.removeEventListener(SESION_EXPIRADA, logout);
+  }, [logout]);
 
   const value = useMemo(
     () => ({ user, isAuth: Boolean(user), loading, login, register, logout }),

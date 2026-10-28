@@ -6,5 +6,5 @@ import Spinner from "./Spinner";
 export default function PublicOnlyRoute() {
   const { isAuth, loading } = useAuth();
   if (loading) return <Spinner />;
-  return isAuth ? <Navigate to="/tablero" replace /> : <Outlet />;
+  return isAuth ? <Navigate to="/resumen" replace /> : <Outlet />;
 }
