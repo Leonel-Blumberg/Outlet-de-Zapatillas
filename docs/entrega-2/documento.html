@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Entrega final · Tablero de control para un outlet de zapatillas</title>
+    <!--
+      Documento de la entrega final. Para generar el PDF:
+        cd client && npm run pdf
+      (o abrir este archivo en Chrome > Imprimir > Guardar como PDF, tamaño A4).
+      Las capturas salen de docs/img/entrega2 y se regeneran con: cd client && npm run capturas
+    -->
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+
+      :root {
+        --acento: #4f46e5;
+        --acento-suave: #eef0ff;
+        --texto: #1f2430;
+        --muted: #5d6475;
+        --borde: #dfe3ea;
+        --verde: #1f9d55;
+        --amarillo: #e0a800;
+        --rojo: #d93025;
+      }
+
+      html {
+        font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+        font-size: 11pt;
+        line-height: 1.45;
+        color: var(--texto);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        max-width: 170mm;
+        margin: 0 auto;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        break-after: avoid;
+      }
+
+      h1 {
+        margin: 0 0 10pt;
+        font-size: 17pt;
+      }
+
+      h2 {
+        margin: 16pt 0 6pt;
+        font-size: 13pt;
+        color: var(--acento);
+      }
+
+      h3 {
+        margin: 12pt 0 4pt;
+        font-size: 11.5pt;
+      }
+
+      p {
+        margin: 0 0 7pt;
+      }
+
+      /* El párrafo que presenta un bloque de código queda en la misma página que el código */
+      p:has(+ pre) {
+        break-after: avoid;
+      }
+
+      ul,
+      ol {
+        margin: 0 0 8pt;
+        padding-left: 18pt;
+      }
+
+      li {
+        margin-bottom: 3pt;
+      }
+
+      a {
+        color: var(--acento);
+      }
+
+      code {
+        font-family: Consolas, "Liberation Mono", monospace;
+        font-size: 9.5pt;
+      }
+
+      pre {
+        margin: 6pt 0 10pt;
+        padding: 8pt 10pt;
+        border: 1px solid var(--borde);
+        border-radius: 4pt;
+        background: #f6f7f9;
+        font-family: Consolas, "Liberation Mono", monospace;
+        font-size: 8.2pt;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        break-inside: avoid;
+      }
+
+      table {
+        width: 100%;
+        margin: 6pt 0 12pt;
+        border-collapse: collapse;
+        font-size: 10pt;
+        break-inside: auto;
+      }
+
+      tr {
+        break-inside: avoid;
+      }
+
+      th,
+      td {
+        padding: 4.5pt 7pt;
+        border: 1px solid var(--borde);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--acento-suave);
+        color: #312e81;
+        font-weight: 700;
+      }
+
+      figure {
+        margin: 8pt 0 14pt;
+        break-inside: avoid;
+      }
+
+      figure img {
+        display: block;
+        width: 100%;
+        border: 1px solid var(--borde);
+        border-radius: 3pt;
+      }
+
+      figcaption {
+        margin-top: 5pt;
+        color: var(--muted);
+        font-size: 9.5pt;
+        text-align: center;
+      }
+
+      .figuras-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8pt;
+      }
+
+      .figuras-2 figure {
+        margin: 0;
+      }
+
+      .figura-angosta img {
+        width: 74%;
+        margin: 0 auto;
+      }
+
+      .nueva-pagina {
+        break-before: page;
+      }
+
+      .estado {
+        display: inline-flex;
+        align-items: center;
+        gap: 4pt;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .estado::before {
+        content: "";
+        width: 7pt;
+        height: 7pt;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .verde {
+        color: var(--verde);
+      }
+
+      .amarillo {
+        color: #a87b00;
+      }
+
+      .rojo {
+        color: var(--rojo);
+      }
+
+      .nota {
+        color: var(--muted);
+        font-size: 10pt;
+      }
+
+      /* ---------- Carátula ---------- */
+
+      .caratula {
+        height: 250mm;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6pt;
+        text-align: center;
+        break-after: page;
+      }
+
+      .caratula .carrera {
+        color: var(--muted);
+        font-size: 11.5pt;
+      }
+
+      .caratula h1 {
+        max-width: 140mm;
+        margin: 26pt 0 4pt;
+        font-size: 26pt;
+      }
+
+      .caratula .subtitulo {
+        margin-bottom: 48pt;
+        color: var(--acento);
+        font-size: 15pt;
+        font-weight: 700;
+      }
+
+      .caratula dl {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 5pt 10pt;
+        margin: 0;
+        text-align: left;
+      }
+
+      .caratula dt {
+        font-weight: 700;
+        text-align: right;
+      }
+
+      .caratula dd {
+        margin: 0;
+      }
+
+      /* Dato que falta cargar antes de entregar */
+      .completar {
+        padding: 0 4pt;
+        background: #fff3b0;
+        font-weight: 700;
+      }
+
+      .indice {
+        break-after: page;
+      }
+
+      .indice ol {
+        padding-left: 16pt;
+        line-height: 1.7;
+      }
+
+      .indice ol ol {
+        list-style: none;
+        padding-left: 14pt;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- ================= Carátula ================= -->
+      <section class="caratula">
+        <p class="carrera">Ingeniería en Sistemas Informáticos</p>
+        <p class="carrera">Bases de Datos Aplicada · Trabajo Cuatrimestral</p>
+        <h1>Tablero de control para un outlet de zapatillas con sucursales</h1>
+        <p class="subtitulo">Entrega final</p>
+        <dl>
+          <dt>Integrantes:</dt>
+          <dd>Leonel Maximiliano Blumberg y Luciano Galo Migoni</dd>
+          <dt>Número de grupo:</dt>
+          <dd><span class="completar">COMPLETAR</span></dd>
+          <dt>Docentes:</dt>
+          <dd>Martina Gimenez · Alejo Nardon</dd>
+          <dt>Fecha:</dt>
+          <dd>28/10/2026</dd>
+          <dt>Repositorio:</dt>
+          <dd>
+            <a href="https://github.com/Leonel-Blumberg/Base-de-datos-actividad"
+              >github.com/Leonel-Blumberg/Base-de-datos-actividad</a
+            >
+          </dd>
+        </dl>
+      </section>
+
+      <!-- ================= Índice ================= -->
+      <section class="indice">
+        <h1>Índice</h1>
+        <ol>
+          <li>Descripción del proyecto</li>
+          <li>Tecnologías utilizadas</li>
+          <li>Entidades representadas</li>
+          <li>Modelo canónico de la base de datos</li>
+          <li>Consultas SQL y arquitectura</li>
+          <li>Indicadores y semaforización</li>
+          <li>Desglose de información: drill down y drill up</li>
+          <li>
+            Pantallas del sistema
+            <ol>
+              <li>8.1 Inicio de sesión y registro</li>
+              <li>8.2 Resumen</li>
+              <li>8.3 Ventas por sucursal (cuatro niveles)</li>
+              <li>8.4 Stock</li>
+              <li>8.5 Clientes</li>
+              <li>8.6 Detalle de ventas</li>
+            </ol>
+          </li>
+          <li>Fundamentación de las decisiones de diseño</li>
+          <li>Repositorio</li>
+        </ol>
+      </section>
+
+      <!-- ================= 1 ================= -->
+      <section>
+        <h1>1. Descripción del proyecto</h1>
+        <p>
+          El proyecto es un tablero de control (dashboard) web para una cadena de
+          outlets de zapatillas con cinco sucursales en Argentina. El tablero toma
+          la información de una base de datos PostgreSQL mediante consultas SQL y
+          la transforma en indicadores y visualizaciones que ayudan a la gerencia a
+          tomar decisiones sobre ventas, reposición de stock y fidelización de
+          clientes.
+        </p>
+        <p>
+          El usuario final es el personal de gestión del outlet: la administración
+          central, que necesita comparar el desempeño de todas las sucursales, y los
+          gerentes de cada sucursal, que necesitan seguir su objetivo mensual, su
+          stock por talle y la actividad de sus clientes.
+        </p>
+
+        <h2>1.1 Objetivo del tablero</h2>
+        <ul>
+          <li>
+            Comparar las ventas de cada sucursal contra su objetivo mensual y
+            detectar rápidamente cuáles están por debajo.
+          </li>
+          <li>
+            Analizar las ventas de lo general a lo particular: sucursal › marca ›
+            modelo › detalle de cada venta (drill down), y volver al nivel anterior
+            (drill up).
+          </li>
+          <li>
+            Anticipar quiebres de stock controlando cada combinación producto -
+            talle - sucursal contra un stock mínimo.
+          </li>
+          <li>
+            Identificar clientes activos, en riesgo e inactivos según los días desde
+            su última compra, para orientar acciones comerciales.
+          </li>
+        </ul>
+
+        <h2>1.2 Qué incluye la entrega final</h2>
+        <ul>
+          <li>
+            Inicio de sesión validado contra la tabla <code>usuarios</code>, con las
+            contraseñas guardadas como hash.
+          </li>
+          <li>
+            Cinco pantallas funcionando: Resumen, Ventas por sucursal, Stock,
+            Clientes y Detalle de ventas.
+          </li>
+          <li>
+            Indicadores del mes (ventas, cumplimiento del objetivo, pares vendidos y
+            ticket promedio) con su variación contra el mes anterior.
+          </li>
+          <li>
+            Tres semáforos con tres estados cada uno y su referencia en pantalla.
+          </li>
+          <li>
+            Drill down y drill up en cuatro niveles: sucursal, marca, modelo y
+            detalle de ventas.
+          </li>
+          <li>
+            Visualizaciones: gráfico de ventas por día, barras de cumplimiento y de
+            participación, y distribución de pares vendidos por talle.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ================= 2 ================= -->
+      <section>
+        <h1>2. Tecnologías utilizadas</h1>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 18%">Capa</th>
+              <th style="width: 30%">Tecnología</th>
+              <th>Uso en el proyecto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Frontend</td>
+              <td>React 19 + Vite, React Router</td>
+              <td>
+                Interfaz web (SPA): login, registro y las pantallas del tablero. Los
+                gráficos se dibujan en SVG, sin librerías externas. Se comunica con la
+                API por HTTP/JSON.
+              </td>
+            </tr>
+            <tr>
+              <td>Backend</td>
+              <td>ASP.NET Core Web API (C#, .NET 10)</td>
+              <td>
+                Expone los endpoints de autenticación y las consultas del tablero.
+                Valida las credenciales y emite el token de sesión (JWT).
+              </td>
+            </tr>
+            <tr>
+              <td>Acceso a datos</td>
+              <td>Npgsql (ADO.NET), sin ORM</td>
+              <td>
+                Conexión de .NET con PostgreSQL. Todas las consultas son SQL escrito a
+                mano y parametrizado.
+              </td>
+            </tr>
+            <tr>
+              <td>Base de datos</td>
+              <td>PostgreSQL</td>
+              <td>
+                Motor relacional. Las tablas se crean y se cargan con scripts SQL
+                (<code>CREATE TABLE</code> e <code>INSERT</code>), sin migraciones.
+              </td>
+            </tr>
+            <tr>
+              <td>Seguridad</td>
+              <td>PasswordHasher de ASP.NET Core Identity y JWT</td>
+              <td>
+                Hash PBKDF2 (HMAC-SHA512, con sal) de las contraseñas y token firmado
+                para proteger los endpoints del tablero.
+              </td>
+            </tr>
+            <tr>
+              <td>Diseño</td>
+              <td>Figma</td>
+              <td>Mockups de las pantallas presentados en la primera entrega.</td>
+            </tr>
+            <tr>
+              <td>Versionado</td>
+              <td>Git + GitHub</td>
+              <td>Repositorio del código y la documentación.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ================= 3 ================= -->
+      <section>
+        <h1>3. Entidades representadas</h1>
+        <p>
+          El tablero representa cuatro entidades principales, elegidas porque cubren
+          las tres preguntas que se hace a diario la gestión de un outlet: cuánto se
+          vende, qué se vende y a quién se le vende.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 18%">Entidad</th>
+              <th>Por qué es relevante para el usuario del tablero</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sucursales</td>
+              <td>
+                Es el primer nivel de análisis. Permite comparar el desempeño de cada
+                local contra su objetivo mensual y decidir dónde intervenir.
+              </td>
+            </tr>
+            <tr>
+              <td>Productos</td>
+              <td>
+                Las zapatillas (modelo, marca, categoría y precio). Permiten saber qué
+                marcas y modelos rotan más y cruzar las ventas con el stock por talle.
+              </td>
+            </tr>
+            <tr>
+              <td>Clientes</td>
+              <td>
+                Permiten medir la actividad y la recurrencia de compra, y detectar a
+                los clientes que dejaron de comprar.
+              </td>
+            </tr>
+            <tr>
+              <td>Ventas</td>
+              <td>
+                Son el hecho que se mide: fecha, sucursal, cliente, medio de pago e
+                importe, con su detalle de productos, talles y cantidades.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Además se usan tablas de soporte: Marcas y Categorías (clasifican los
+          productos), Stock (cantidad por producto, talle y sucursal), Objetivos de
+          venta (meta mensual de cada sucursal), Detalle de ventas (líneas de cada
+          venta) y Usuarios (acceso al tablero).
+        </p>
+      </section>
+
+      <!-- ================= 4 ================= -->
+      <section class="nueva-pagina">
+        <h1>4. Modelo canónico de la base de datos</h1>
+        <figure>
+          <img src="../img/der.png" alt="Diagrama entidad-relación de la base de datos" />
+          <figcaption>Figura 1. Diagrama entidad-relación (PostgreSQL).</figcaption>
+        </figure>
+
+        <h2>4.1 Relaciones principales</h2>
+        <ul>
+          <li>
+            Una sucursal tiene muchos objetivos de venta (uno por mes), muchos
+            registros de stock y muchas ventas.
+          </li>
+          <li>Una marca y una categoría clasifican a muchos productos.</li>
+          <li>
+            Un producto aparece en muchos registros de stock (uno por sucursal y
+            talle) y en muchas líneas de detalle de venta.
+          </li>
+          <li>Un cliente realiza muchas ventas y cada venta tiene una o más líneas.</li>
+          <li>
+            Un usuario puede estar asignado a una sucursal (gerente) o a ninguna
+            (administración central).
+          </li>
+        </ul>
+
+        <h2>4.2 Tablas y restricciones</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 19%">Tabla</th>
+              <th style="width: 36%">Contenido</th>
+              <th>Claves y restricciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>sucursales</code></td>
+              <td>Locales del outlet: nombre, dirección, ciudad y provincia.</td>
+              <td>PK <code>id_sucursal</code> · UNIQUE <code>nombre</code></td>
+            </tr>
+            <tr>
+              <td><code>usuarios</code></td>
+              <td>Cuentas con acceso al tablero y su rol.</td>
+              <td>
+                PK <code>id_usuario</code> · UNIQUE <code>email</code> · CHECK rol
+                (admin, gerente, consulta) · FK a sucursales
+              </td>
+            </tr>
+            <tr>
+              <td><code>objetivos_venta</code></td>
+              <td>Meta de facturación de cada sucursal por mes.</td>
+              <td>
+                FK a sucursales · CHECK mes 1 a 12 y monto &gt; 0 · UNIQUE (sucursal,
+                año, mes)
+              </td>
+            </tr>
+            <tr>
+              <td><code>marcas</code>, <code>categorias</code></td>
+              <td>Clasificación de los productos.</td>
+              <td>UNIQUE <code>nombre</code></td>
+            </tr>
+            <tr>
+              <td><code>productos</code></td>
+              <td>Modelos de zapatilla con su precio de lista y de outlet.</td>
+              <td>
+                UNIQUE <code>sku</code> · FK a marcas y categorias · CHECK género y
+                precios &gt; 0
+              </td>
+            </tr>
+            <tr>
+              <td><code>stock</code></td>
+              <td>Pares disponibles por producto, talle y sucursal, y su mínimo.</td>
+              <td>
+                FK a sucursales y productos · CHECK cantidades &gt;= 0 · UNIQUE
+                (sucursal, producto, talle)
+              </td>
+            </tr>
+            <tr>
+              <td><code>clientes</code></td>
+              <td>Compradores registrados.</td>
+              <td>UNIQUE <code>dni</code></td>
+            </tr>
+            <tr>
+              <td><code>ventas</code></td>
+              <td>Cabecera de cada venta: sucursal, cliente, fecha, medio de pago y total.</td>
+              <td>
+                UNIQUE <code>numero</code> · FK a sucursales y clientes · CHECK medio
+                de pago y total &gt;= 0
+              </td>
+            </tr>
+            <tr>
+              <td><code>detalle_ventas</code></td>
+              <td>Líneas de cada venta: producto, talle, cantidad y precio.</td>
+              <td>
+                FK a ventas y productos · CHECK cantidad y precio &gt; 0 · UNIQUE
+                (venta, producto, talle)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="nota">
+          El diccionario de datos completo, campo por campo, está en el documento de
+          la primera entrega y en <code>server/base de datos/01_crear_tablas.sql</code>.
+        </p>
+      </section>
+
+      <!-- ================= 5 ================= -->
+      <section>
+        <h1>5. Consultas SQL y arquitectura</h1>
+        <p>
+          El navegador nunca accede a la base de datos. Cada pantalla le pide sus datos
+          a la API con el token de sesión, la API ejecuta las consultas SQL
+          parametrizadas con Npgsql y devuelve el resultado en JSON. El frontend solo
+          da formato y dibuja: los totales, los porcentajes y los estados de los
+          semáforos salen de las consultas.
+        </p>
+        <pre>Navegador (React) → API REST (ASP.NET Core + JWT) → SQL parametrizado (Npgsql) → PostgreSQL</pre>
+
+        <h2>5.1 Carga de la base de datos</h2>
+        <p>
+          La estructura y los datos se cargan con scripts SQL que la API ejecuta al
+          arrancar, en orden y dentro de una transacción. Todos se pueden ejecutar
+          varias veces sin duplicar datos.
+        </p>
+        <ul>
+          <li><code>01_crear_tablas.sql</code>: crea las 10 tablas con sus restricciones.</li>
+          <li><code>02_siembra_usuarios.sql</code>: carga las cuentas de prueba con la contraseña hasheada.</li>
+          <li>
+            <code>03_siembra_datos.sql</code>: carga con <code>INSERT</code> las
+            sucursales, productos, stock, clientes, objetivos y ventas de prueba.
+          </li>
+        </ul>
+
+        <h2>5.2 Consultas de cada pantalla</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 22%">Pantalla</th>
+              <th style="width: 33%">Endpoint</th>
+              <th>Qué consulta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Todas</td>
+              <td><code>GET /api/tablero/catalogos</code></td>
+              <td>Meses con ventas, sucursales, marcas y fecha de referencia.</td>
+            </tr>
+            <tr>
+              <td>Resumen</td>
+              <td><code>GET /api/tablero/resumen</code></td>
+              <td>
+                Indicadores del mes y del anterior, cumplimiento por sucursal, conteo
+                de stock y de clientes por estado y ventas por día.
+              </td>
+            </tr>
+            <tr>
+              <td>Nivel 1 · Sucursal</td>
+              <td><code>GET /api/ventas/sucursales</code></td>
+              <td>Ventas, tickets, pares y cumplimiento de cada sucursal.</td>
+            </tr>
+            <tr>
+              <td>Nivel 2 · Marca</td>
+              <td><code>…/sucursales/{id}/marcas</code></td>
+              <td>Ventas y pares por marca en la sucursal, del mes y del anterior.</td>
+            </tr>
+            <tr>
+              <td>Nivel 3 · Modelo</td>
+              <td><code>…/marcas/{id}/modelos</code></td>
+              <td>Ventas por modelo, stock total y peor estado de stock entre sus talles.</td>
+            </tr>
+            <tr>
+              <td>Nivel 4 · Detalle</td>
+              <td><code>…/productos/{id}</code></td>
+              <td>Líneas de <code>detalle_ventas</code> paginadas y pares vendidos por talle.</td>
+            </tr>
+            <tr>
+              <td>Stock</td>
+              <td><code>GET /api/stock</code></td>
+              <td>Stock de cada producto, talle y sucursal con su estado.</td>
+            </tr>
+            <tr>
+              <td>Clientes</td>
+              <td><code>GET /api/clientes</code></td>
+              <td>Última compra, sucursal habitual, compras y estado de cada cliente.</td>
+            </tr>
+            <tr>
+              <td>Detalle de ventas</td>
+              <td><code>GET /api/ventas</code></td>
+              <td>Ventas filtradas, ordenadas y paginadas, con los totales del filtro.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="nota">
+          El formato de cada respuesta está documentado en
+          <code>docs/contrato-api.md</code> del repositorio.
+        </p>
+
+        <h2>5.3 Ejemplos de consultas</h2>
+        <p>Cumplimiento del objetivo mensual de cada sucursal (semáforo del resumen y del nivel 1):</p>
+        <pre>SELECT s.id_sucursal, s.nombre,
+       COALESCE(SUM(v.total), 0) AS ventas,
+       o.monto_objetivo AS objetivo,
+       ROUND(COALESCE(SUM(v.total), 0) * 100 / o.monto_objetivo, 1)
+           AS cumplimiento,
+       CASE WHEN o.monto_objetivo IS NULL THEN NULL
+            WHEN COALESCE(SUM(v.total), 0) &gt;= o.monto_objetivo
+                 THEN 'cumple'
+            WHEN COALESCE(SUM(v.total), 0) &gt;= o.monto_objetivo * 0.8
+                 THEN 'atencion'
+            ELSE 'critico'
+       END AS estado
+FROM sucursales s
+LEFT JOIN objetivos_venta o ON o.id_sucursal = s.id_sucursal
+                           AND o.anio = @anio AND o.mes = @mes
+LEFT JOIN ventas v ON v.id_sucursal = s.id_sucursal
+                  AND v.fecha &gt;= @desde AND v.fecha &lt; @hasta
+GROUP BY s.id_sucursal, s.nombre, o.monto_objetivo
+ORDER BY ventas DESC;</pre>
+        <p>
+          Actividad de los clientes. Los días se cuentan contra una fecha de
+          referencia (el día siguiente a la última venta registrada) y no contra la
+          fecha actual, para que el estado no dependa del día en que se mira el
+          tablero:
+        </p>
+        <pre>WITH referencia AS (SELECT MAX(fecha)::date + 1 AS fecha FROM ventas),
+     ultima AS (SELECT id_cliente, MAX(fecha)::date AS ultima_compra
+                FROM ventas
+                GROUP BY id_cliente)
+SELECT c.id_cliente, c.nombre, c.apellido, u.ultima_compra,
+       r.fecha - u.ultima_compra AS dias,
+       CASE WHEN u.ultima_compra IS NULL
+              OR r.fecha - u.ultima_compra &gt; 90 THEN 'inactivo'
+            WHEN r.fecha - u.ultima_compra &gt; 30 THEN 'en_riesgo'
+            ELSE 'activo'
+       END AS estado
+FROM clientes c
+CROSS JOIN referencia r
+LEFT JOIN ultima u ON u.id_cliente = c.id_cliente
+ORDER BY u.ultima_compra DESC NULLS LAST;</pre>
+      </section>
+
+      <!-- ================= 6 ================= -->
+      <section>
+        <h1>6. Indicadores y semaforización</h1>
+        <h2>6.1 Indicadores del mes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 24%">Indicador</th>
+              <th style="width: 36%">Cálculo</th>
+              <th>Para qué le sirve al usuario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ventas del mes</td>
+              <td>Suma de <code>ventas.total</code> y variación contra el mes anterior.</td>
+              <td>Saber si el negocio vende más o menos que el mes pasado.</td>
+            </tr>
+            <tr>
+              <td>Cumplimiento del objetivo</td>
+              <td>Ventas del mes ÷ suma de <code>objetivos_venta.monto_objetivo</code>.</td>
+              <td>Saber si se va a llegar a la meta y cuánto falta.</td>
+            </tr>
+            <tr>
+              <td>Pares vendidos</td>
+              <td>Suma de <code>detalle_ventas.cantidad</code>.</td>
+              <td>Medir el volumen físico, que es lo que hay que reponer.</td>
+            </tr>
+            <tr>
+              <td>Ticket promedio</td>
+              <td>Ventas del mes ÷ cantidad de ventas.</td>
+              <td>Ver si cada cliente gasta más o menos (mix de productos y promociones).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>6.2 Semáforos</h2>
+        <p>
+          El tablero tiene tres semáforos con tres estados cada uno. El estado se
+          calcula en SQL con datos reales de la base y siempre se muestra con su texto
+          (no solo con el color), acompañado de una referencia visible en la misma
+          pantalla.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 25%">Semáforo</th>
+              <th>Verde</th>
+              <th>Amarillo</th>
+              <th>Rojo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cumplimiento del objetivo mensual por sucursal</td>
+              <td><span class="estado verde">Cumple</span><br />100% o más del objetivo</td>
+              <td><span class="estado amarillo">Atención</span><br />80% a 99,9%</td>
+              <td><span class="estado rojo">Crítico</span><br />menos del 80%</td>
+            </tr>
+            <tr>
+              <td>Stock por producto, talle y sucursal</td>
+              <td><span class="estado verde">Normal</span><br />más del doble del mínimo</td>
+              <td><span class="estado amarillo">Atención</span><br />más del mínimo y hasta el doble</td>
+              <td><span class="estado rojo">Crítico</span><br />igual o menor al mínimo (incluye sin stock)</td>
+            </tr>
+            <tr>
+              <td>Actividad de clientes</td>
+              <td><span class="estado verde">Activo</span><br />compró en los últimos 30 días</td>
+              <td><span class="estado amarillo">En riesgo</span><br />última compra hace 31 a 90 días</td>
+              <td><span class="estado rojo">Inactivo</span><br />más de 90 días o nunca compró</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>
+            <strong>Objetivo:</strong> indica en qué sucursales hay que intervenir este
+            mes. Aparece en el resumen y en los niveles 1 y 2 del desglose.
+          </li>
+          <li>
+            <strong>Stock:</strong> en un outlet no hay reposición continua de cada
+            talle, así que un talle agotado es una venta perdida. Aparece en la
+            pantalla de stock, en el resumen y, para cada modelo, en el nivel 3 del
+            desglose (se toma el peor estado entre sus talles).
+          </li>
+          <li>
+            <strong>Clientes:</strong> separa a los clientes que hay que recuperar
+            (en riesgo) de los que ya se perdieron (inactivos). Aparece en la pantalla
+            de clientes y en el resumen.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ================= 7 ================= -->
+      <section>
+        <h1>7. Desglose de información: drill down y drill up</h1>
+        <p>
+          Las ventas se analizan en cuatro niveles. Al hacer clic en una fila se baja
+          un nivel (drill down). Para subir (drill up) se puede usar el botón
+          "Volver", la ruta de navegación (Todas las sucursales › Palermo › Nike), los
+          indicadores de nivel o el botón "atrás" del navegador, porque cada nivel
+          tiene su propia dirección web. El mes elegido se mantiene en todos los
+          niveles.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 17%">Nivel</th>
+              <th>Qué muestra</th>
+              <th style="width: 28%">Navegación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1 · Sucursal</td>
+              <td>Ventas, tickets, pares, participación y cumplimiento del objetivo de cada sucursal.</td>
+              <td>Clic en una sucursal: nivel 2</td>
+            </tr>
+            <tr>
+              <td>2 · Marca</td>
+              <td>Indicadores de la sucursal y ventas por marca, con precio promedio, participación y variación mensual.</td>
+              <td>Clic en una marca: nivel 3<br />Volver: nivel 1</td>
+            </tr>
+            <tr>
+              <td>3 · Modelo</td>
+              <td>Modelos de la marca vendidos en la sucursal, con precio, pares, ventas, stock y estado de stock.</td>
+              <td>Clic en un modelo: nivel 4<br />Volver: nivel 2</td>
+            </tr>
+            <tr>
+              <td>4 · Detalle</td>
+              <td>Cada línea de venta del modelo (fecha, n° de venta, cliente, talle, cantidad, precio y medio de pago) y los pares vendidos por talle.</td>
+              <td>Volver: nivel 3</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ================= 8 ================= -->
+      <section class="nueva-pagina">
+        <h1>8. Pantallas del sistema</h1>
+        <p>
+          Todas las pantallas del tablero comparten la barra lateral, los colores,
+          la tipografía y el estilo de las tablas. Las pantallas de ventas tienen un
+          selector de mes y las tablas grandes tienen filtros y paginación.
+        </p>
+
+        <h2>8.1 Inicio de sesión y registro</h2>
+        <p>
+          Las credenciales se validan contra la tabla <code>usuarios</code>. Con
+          credenciales incorrectas no se da acceso y se muestra el mensaje del backend;
+          con credenciales válidas se redirige al resumen.
+        </p>
+        <div class="figuras-2">
+          <figure>
+            <img src="../img/entrega2/01-login.png" alt="Pantalla de inicio de sesión" />
+            <figcaption>Figura 2. Inicio de sesión.</figcaption>
+          </figure>
+          <figure>
+            <img src="../img/entrega2/02-login-error.png" alt="Inicio de sesión con credenciales incorrectas" />
+            <figcaption>Figura 3. Credenciales incorrectas.</figcaption>
+          </figure>
+          <figure>
+            <img src="../img/entrega2/03-registro.png" alt="Pantalla de registro" />
+            <figcaption>Figura 4. Registro de usuario.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="nueva-pagina">
+        <h2>8.2 Resumen</h2>
+        <p>
+          Pantalla principal: los cuatro indicadores del mes, el semáforo de
+          cumplimiento por sucursal con su referencia, el estado del stock y de los
+          clientes, y el gráfico de ventas por día. Se puede filtrar por mes y por
+          sucursal, y cada bloque lleva a su pantalla de detalle.
+        </p>
+        <figure class="figura-angosta">
+          <img src="../img/entrega2/04-resumen.png" alt="Pantalla de resumen" />
+          <figcaption>Figura 5. Resumen del mes.</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/entrega2/05-resumen-grafico.png" alt="Gráfico de ventas por día con el detalle de un día" />
+          <figcaption>
+            Figura 6. Al pasar el mouse por una columna se ve el detalle del día. El
+            botón "Ver tabla" muestra los mismos datos en una tabla.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="nueva-pagina">
+        <h2>8.3 Ventas por sucursal: drill down en cuatro niveles</h2>
+        <figure>
+          <img src="../img/entrega2/06-nivel1-sucursales.png" alt="Nivel 1: ventas por sucursal" />
+          <figcaption>Figura 7. Nivel 1: ventas por sucursal.</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/entrega2/07-nivel2-marcas.png" alt="Nivel 2: ventas por marca en una sucursal" />
+          <figcaption>Figura 8. Nivel 2: ventas por marca dentro de la sucursal elegida.</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/entrega2/08-nivel3-modelos.png" alt="Nivel 3: ventas por modelo" />
+          <figcaption>Figura 9. Nivel 3: modelos de la marca vendidos en la sucursal, con su estado de stock.</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/entrega2/09-nivel4-detalle.png" alt="Nivel 4: detalle de ventas del modelo" />
+          <figcaption>Figura 10. Nivel 4: cada línea de venta del modelo y los pares vendidos por talle.</figcaption>
+        </figure>
+      </section>
+
+      <section class="nueva-pagina">
+        <h2>8.4 Stock</h2>
+        <p>
+          Una fila por producto, talle y sucursal, ordenada de la situación más
+          crítica a la más holgada. Se puede buscar por modelo o SKU y filtrar por
+          sucursal, marca y estado; los botones de estado muestran cuántas
+          combinaciones hay en cada uno.
+        </p>
+        <figure>
+          <img src="../img/entrega2/10-stock.png" alt="Pantalla de stock por talle" />
+          <figcaption>Figura 11. Stock por talle con su semáforo y referencias.</figcaption>
+        </figure>
+      </section>
+
+      <section class="nueva-pagina">
+        <h2>8.5 Clientes</h2>
+        <p>
+          Cada cliente con su sucursal habitual, sus compras de los últimos 12 meses,
+          el total gastado y los días desde su última compra. Las tarjetas de arriba
+          muestran cuántos clientes hay en cada estado y también filtran la tabla.
+        </p>
+        <figure>
+          <img src="../img/entrega2/11-clientes.png" alt="Pantalla de clientes" />
+          <figcaption>Figura 12. Clientes con su semáforo de actividad.</figcaption>
+        </figure>
+      </section>
+
+      <section class="nueva-pagina">
+        <h2>8.6 Detalle de ventas</h2>
+        <p>
+          Todas las ventas con filtros por fecha, sucursal y medio de pago, búsqueda
+          por número de venta o cliente, orden por fecha o importe y paginación. Los
+          totales corresponden a todas las ventas del filtro, no solo a la página.
+        </p>
+        <figure>
+          <img src="../img/entrega2/12-detalle-ventas.png" alt="Pantalla de detalle de ventas" />
+          <figcaption>Figura 13. Detalle de ventas con filtros y totales.</figcaption>
+        </figure>
+      </section>
+
+      <!-- ================= 9 ================= -->
+      <section class="nueva-pagina">
+        <h1>9. Fundamentación de las decisiones de diseño</h1>
+        <h2>9.1 Indicadores y entidades</h2>
+        <ul>
+          <li>
+            Los cuatro indicadores del resumen responden en un vistazo si el mes va
+            bien: cuánto se vendió, si se llega a la meta, cuánto volumen se movió y
+            cuánto gasta cada cliente. La variación contra el mes anterior le da
+            contexto a cada número.
+          </li>
+          <li>
+            Las entidades siguen el recorrido de una venta: dónde se vendió
+            (sucursal), qué se vendió (producto, con su marca y talle) y a quién
+            (cliente). Así cada pregunta del usuario tiene una pantalla.
+          </li>
+          <li>
+            Cada semáforo apunta a una decisión concreta: dónde reforzar las ventas
+            (objetivo), qué reponer (stock) y a quién contactar (clientes).
+          </li>
+        </ul>
+
+        <h2>9.2 Visualizaciones</h2>
+        <ul>
+          <li>
+            Para comparar pocas sucursales, marcas o modelos se usan tablas con
+            barras: la barra muestra la proporción de un vistazo y la tabla da el
+            valor exacto.
+          </li>
+          <li>
+            La evolución dentro del mes se muestra con un gráfico de columnas por
+            día, con una sola serie y un solo eje para que no haya ambigüedad. Tiene
+            detalle al pasar el mouse y una vista en tabla con los mismos datos.
+          </li>
+          <li>
+            Los pares por talle se muestran como barras horizontales ordenadas por
+            talle, porque lo que importa es la forma de la curva de talles.
+          </li>
+          <li>
+            Los colores verde, amarillo y rojo se reservan para los semáforos y
+            siempre van con su texto y su referencia, para que el estado se entienda
+            aun sin distinguir los colores.
+          </li>
+        </ul>
+
+        <h2>9.3 Navegación y coherencia</h2>
+        <ul>
+          <li>
+            El desglose va de lo general a lo particular en el mismo orden en que
+            piensa un gerente (sucursal, marca, modelo, venta), y en cada nivel se ve
+            el camino recorrido y cómo volver.
+          </li>
+          <li>
+            Todas las pantallas usan la misma estructura: título, filtros arriba de lo
+            que filtran, indicadores y después el detalle. El mes elegido se comparte
+            entre el resumen y el desglose.
+          </li>
+          <li>
+            Las cifras coinciden entre pantallas porque salen de las mismas
+            consultas: el total del nivel 1 es el mismo que el del resumen, y la suma
+            de las marcas es igual a las ventas de la sucursal.
+          </li>
+          <li>
+            Las tablas grandes se paginan y se filtran en la base de datos, así la
+            pantalla responde rápido aunque haya miles de ventas.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ================= 10 ================= -->
+      <section>
+        <h1>10. Repositorio</h1>
+        <p>
+          El código fuente y la documentación están en
+          <a href="https://github.com/Leonel-Blumberg/Base-de-datos-actividad"
+            >https://github.com/Leonel-Blumberg/Base-de-datos-actividad</a
+          >.
+        </p>
+        <ul>
+          <li><code>client/</code>: frontend en React y Vite.</li>
+          <li><code>server/</code>: backend ASP.NET Core Web API (autenticación y consultas del tablero).</li>
+          <li><code>server/base de datos/</code>: scripts SQL de creación de tablas y carga de datos.</li>
+          <li><code>docs/</code>: documentos de las entregas, contrato de la API, DER, mockups y capturas.</li>
+        </ul>
+        <p>
+          Los pasos para ejecutarlo están en el <code>README.md</code> del
+          repositorio. Usuario de prueba: <code>admin@outlet.com</code> /
+          <code>Admin1234</code>.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

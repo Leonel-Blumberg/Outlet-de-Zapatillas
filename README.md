@@ -6,18 +6,31 @@ la materia **Bases de Datos Aplicada**.
 
 ## Contenido
 
+- **Documento de la entrega final**:
+  **`docs/Entrega 2 - Leonel Blumberg y Luciano Migoni.pdf`** (se genera desde
+  **`docs/entrega-2/documento.html`**, ver **`client/README.md`**).
 - **Documento de la primera entrega** con el DER y el diccionario de datos:
   **`docs/Entrega 1 - Leonel Blumberg y Luciano Migoni.docx`**.
+- **Contrato de la API** entre el frontend y el backend:
+  **`docs/contrato-api.md`**. Tiene cada endpoint del tablero con sus
+  parámetros, el JSON que devuelve y las reglas de los semáforos.
 - **Diagrama entidad-relación** (Lucidchart) en **`docs/img/der.png`**.
-- **Frontend** en **`client/`**: inicio de sesión, registro y tablero.
-- **Backend** en **`server/`**: API de autenticación con token JWT.
+- **Frontend** en **`client/`**: inicio de sesión, registro y las cinco
+  pantallas del tablero (Resumen, Ventas por sucursal, Stock, Clientes y
+  Detalle de ventas).
+- **Backend** en **`server/`**: API de autenticación con token JWT y consultas
+  del tablero.
 - **Base de datos** en **`server/base de datos/`**: scripts SQL de creación de
-  las 10 tablas y de siembra de usuarios.
-- **Mockups** (Figma) en **`docs/img/mockups/`**: semaforización, drill down /
-  drill up (Sucursal › Marca › Modelo › Detalle) y tablas de datos.
+  las 10 tablas y de carga de datos.
+- **Indicadores del mes**: ventas, cumplimiento del objetivo, pares vendidos y
+  ticket promedio, con su variación contra el mes anterior.
 - **Semaforización** de cumplimiento de objetivos, stock por talle y actividad
-  de clientes, con tres estados: verde, amarillo y rojo (los criterios de cada
-  color están en la sección 7 del documento).
+  de clientes, con tres estados (verde, amarillo y rojo) y su referencia en
+  pantalla.
+- **Drill down / drill up** en cuatro niveles: Sucursal › Marca › Modelo ›
+  Detalle de ventas.
+- **Mockups** (Figma) de la primera entrega en **`docs/img/mockups/`**.
+- **Capturas** de todas las pantallas en **`docs/img/entrega2/`**.
 
 ## Requisitos previos
 
@@ -37,12 +50,16 @@ Para usar otra contraseña de PostgreSQL, ver **`server/README.md`**.
 - Frontend: **`http://localhost:5173`**
 
 Para levantar el backend, ejecutar **`dotnet run`** dentro de
-**`server/OutletApi`**. La primera vez crea la base, las tablas y los usuarios
-de prueba.
+**`server/OutletApi`**. La primera vez crea la base, las tablas y los datos de
+prueba.
 
 Luego, en otra terminal, ejecutar **`npm install`** y **`npm run dev`** dentro
 de **`client`**. Vite redirige las llamadas a **`/api`** al backend, así que no
 hace falta configurar CORS.
+
+Para ver el front sin el backend, ejecutar **`npm run dev:mocks`** dentro de
+**`client`**: usa datos de prueba que respetan el contrato de la API (ver
+**`client/README.md`**).
 
 Usuarios de prueba (solo para desarrollo):
 
@@ -57,45 +74,39 @@ Usuarios de prueba (solo para desarrollo):
 
 **Inicio de sesión**
 
-![Inicio de sesión](docs/img/app-login.png)
+![Inicio de sesión](docs/img/entrega2/01-login.png)
 
-**Registro de usuario**
+**Resumen del mes**
 
-![Registro de usuario](docs/img/app-registro.png)
+![Resumen del mes](docs/img/entrega2/04-resumen.png)
 
-**Inicio de sesión con credenciales incorrectas**
+**Drill down, nivel 1: ventas por sucursal**
 
-![Inicio de sesión con credenciales incorrectas](docs/img/app-login-error.png)
+![Ventas por sucursal](docs/img/entrega2/06-nivel1-sucursales.png)
 
-**Tablero luego de iniciar sesión**
+**Drill down, nivel 2: ventas por marca**
 
-![Tablero luego de iniciar sesión](docs/img/app-tablero.png)
+![Ventas por marca](docs/img/entrega2/07-nivel2-marcas.png)
 
-**Mockup: resumen con semáforo de objetivos**
+**Drill down, nivel 3: ventas por modelo**
 
-![Resumen con semáforo de objetivos](docs/img/mockups/Main.png)
+![Ventas por modelo](docs/img/entrega2/08-nivel3-modelos.png)
 
-**Mockup: stock por talle**
+**Drill down, nivel 4: detalle de ventas del modelo**
 
-![Stock por talle](docs/img/mockups/Stock.png)
+![Detalle de ventas del modelo](docs/img/entrega2/09-nivel4-detalle.png)
 
-**Mockup: clientes**
+**Stock por talle**
 
-![Clientes](docs/img/mockups/Clientes.png)
+![Stock por talle](docs/img/entrega2/10-stock.png)
 
-**Mockup: drill down por sucursal, marca, modelo y detalle**
+**Clientes**
 
-![Nivel 1: sucursales](docs/img/mockups/Nivel1Sucursales.png)
+![Clientes](docs/img/entrega2/11-clientes.png)
 
-![Nivel 2: marcas](docs/img/mockups/Nivel2Marcas.png)
+**Detalle de ventas**
 
-![Nivel 3: modelos](docs/img/mockups/Nivel3Modelos.png)
-
-![Nivel 4: detalle](docs/img/mockups/Nivel4Detalle.png)
-
-**Mockup: detalle de ventas**
-
-![Detalle de ventas](docs/img/mockups/Ventas.png)
+![Detalle de ventas](docs/img/entrega2/12-detalle-ventas.png)
 
 ## Autores
 
