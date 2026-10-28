@@ -439,7 +439,9 @@
               <td>PostgreSQL</td>
               <td>
                 Motor relacional. Las tablas se crean y se cargan con scripts SQL
-                (<code>CREATE TABLE</code> e <code>INSERT</code>), sin migraciones.
+                (<code>CREATE TABLE</code> e <code>INSERT</code>), sin migraciones. Las
+                reglas de los semáforos son funciones SQL y hay vistas para el stock y
+                la actividad de los clientes.
               </td>
             </tr>
             <tr>
@@ -641,16 +643,44 @@
         <p>
           La estructura y los datos se cargan con scripts SQL que la API ejecuta al
           arrancar, en orden y dentro de una transacción. Todos se pueden ejecutar
-          varias veces sin duplicar datos.
+          varias veces sin duplicar datos (<code>CREATE TABLE IF NOT EXISTS</code>,
+          <code>ON CONFLICT DO NOTHING</code>, <code>CREATE OR REPLACE</code>).
         </p>
-        <ul>
-          <li><code>01_crear_tablas.sql</code>: crea las 10 tablas con sus restricciones.</li>
-          <li><code>02_siembra_usuarios.sql</code>: carga las cuentas de prueba con la contraseña hasheada.</li>
-          <li>
-            <code>03_siembra_datos.sql</code>: carga con <code>INSERT</code> las
-            sucursales, productos, stock, clientes, objetivos y ventas de prueba.
-          </li>
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 31%">Script</th>
+              <th>Qué hace</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>01_crear_tablas.sql</code></td>
+              <td>Crea las 10 tablas con sus claves primarias y foráneas y las restricciones UNIQUE y CHECK.</td>
+            </tr>
+            <tr>
+              <td><code>02_siembra_usuarios.sql</code></td>
+              <td>Carga las cuentas de prueba con la contraseña hasheada.</td>
+            </tr>
+            <tr>
+              <td><code>03_siembra_datos.sql</code></td>
+              <td>
+                Carga con <code>INSERT</code> 5 sucursales, 6 marcas, 3 categorías, 26
+                productos, 1.430 registros de stock, 2.800 clientes, 30 objetivos
+                mensuales, 9.308 ventas y 12.386 líneas de detalle, de abril a
+                septiembre de 2026. El total de cada venta es la suma de sus líneas.
+              </td>
+            </tr>
+            <tr>
+              <td><code>04_vistas_y_funciones.sql</code></td>
+              <td>
+                Crea las funciones de los tres semáforos y las vistas
+                <code>vista_stock</code> y <code>vista_actividad_clientes</code>, que
+                usan varias pantallas.
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <h2>5.2 Consultas de cada pantalla</h2>
         <table>
@@ -717,48 +747,84 @@
           <code>docs/contrato-api.md</code> del repositorio.
         </p>
 
-        <h2>5.3 Ejemplos de consultas</h2>
-        <p>Cumplimiento del objetivo mensual de cada sucursal (semáforo del resumen y del nivel 1):</p>
-        <pre>SELECT s.id_sucursal, s.nombre,
-       COALESCE(SUM(v.total), 0) AS ventas,
-       o.monto_objetivo AS objetivo,
-       ROUND(COALESCE(SUM(v.total), 0) * 100 / o.monto_objetivo, 1)
-           AS cumplimiento,
-       CASE WHEN o.monto_objetivo IS NULL THEN NULL
-            WHEN COALESCE(SUM(v.total), 0) &gt;= o.monto_objetivo
-                 THEN 'cumple'
-            WHEN COALESCE(SUM(v.total), 0) &gt;= o.monto_objetivo * 0.8
-                 THEN 'atencion'
-            ELSE 'critico'
-       END AS estado
+        <h2>5.3 Semáforos en la base de datos</h2>
+        <p>
+          Las reglas de los semáforos están en funciones SQL, así todas las consultas
+          calculan los estados de la misma manera: <code>estado_objetivo</code>,
+          <code>estado_stock</code> y <code>estado_cliente</code>. Por ejemplo:
+        </p>
+        <pre>CREATE OR REPLACE FUNCTION estado_objetivo(ventas numeric, objetivo numeric)
+RETURNS varchar LANGUAGE sql IMMUTABLE AS $$
+    SELECT CASE WHEN objetivo IS NULL          THEN NULL
+                WHEN ventas &gt;= objetivo        THEN 'cumple'
+                WHEN ventas &gt;= objetivo * 0.8  THEN 'atencion'
+                ELSE 'critico'
+           END
+$$;</pre>
+
+        <h2>5.4 Ejemplos de consultas</h2>
+        <p>
+          Cumplimiento del objetivo de cada sucursal en el mes (semáforo del resumen y
+          del nivel 1). Es una versión resumida: la consulta completa también calcula
+          los tickets y los pares vendidos.
+        </p>
+        <pre>WITH ventas_mes AS (
+    SELECT id_sucursal, SUM(total) AS ventas
+    FROM ventas
+    WHERE fecha &gt;= @desde AND fecha &lt; @hasta
+    GROUP BY id_sucursal
+)
+SELECT s.id_sucursal, s.nombre,
+       COALESCE(vm.ventas, 0) AS ventas,
+       o.monto_objetivo       AS objetivo,
+       ROUND(COALESCE(vm.ventas, 0) * 100 / o.monto_objetivo, 1) AS cumplimiento,
+       estado_objetivo(COALESCE(vm.ventas, 0), o.monto_objetivo)  AS estado
 FROM sucursales s
+LEFT JOIN ventas_mes vm     ON vm.id_sucursal = s.id_sucursal
 LEFT JOIN objetivos_venta o ON o.id_sucursal = s.id_sucursal
                            AND o.anio = @anio AND o.mes = @mes
-LEFT JOIN ventas v ON v.id_sucursal = s.id_sucursal
-                  AND v.fecha &gt;= @desde AND v.fecha &lt; @hasta
-GROUP BY s.id_sucursal, s.nombre, o.monto_objetivo
+ORDER BY ventas DESC, s.nombre;</pre>
+        <p>
+          Nivel 2 del desglose: ventas de cada marca en la sucursal, del mes elegido y
+          del anterior en una sola pasada (para la variación mensual):
+        </p>
+        <pre>WITH lineas AS (
+    SELECT p.id_marca, d.subtotal, d.cantidad, v.fecha &gt;= @desde AS del_mes
+    FROM ventas v
+    JOIN detalle_ventas d ON d.id_venta = v.id_venta
+    JOIN productos p      ON p.id_producto = d.id_producto
+    WHERE v.id_sucursal = @id_sucursal
+      AND v.fecha &gt;= @desde_anterior AND v.fecha &lt; @hasta
+)
+SELECT m.id_marca, m.nombre,
+       SUM(l.subtotal) FILTER (WHERE l.del_mes)                  AS ventas,
+       SUM(l.cantidad) FILTER (WHERE l.del_mes)                  AS pares,
+       COALESCE(SUM(l.subtotal) FILTER (WHERE NOT l.del_mes), 0) AS ventas_anterior
+FROM lineas l
+JOIN marcas m ON m.id_marca = l.id_marca
+GROUP BY m.id_marca, m.nombre
+HAVING SUM(l.subtotal) FILTER (WHERE l.del_mes) &gt; 0
 ORDER BY ventas DESC;</pre>
         <p>
-          Actividad de los clientes. Los días se cuentan contra una fecha de
-          referencia (el día siguiente a la última venta registrada) y no contra la
-          fecha actual, para que el estado no dependa del día en que se mira el
-          tablero:
+          Actividad de los clientes (vista <code>vista_actividad_clientes</code>,
+          resumida). Los días se cuentan contra una fecha de referencia, el día
+          siguiente a la última venta registrada, y no contra la fecha actual: así el
+          estado no depende del día en que se mira el tablero.
         </p>
-        <pre>WITH referencia AS (SELECT MAX(fecha)::date + 1 AS fecha FROM ventas),
-     ultima AS (SELECT id_cliente, MAX(fecha)::date AS ultima_compra
-                FROM ventas
-                GROUP BY id_cliente)
-SELECT c.id_cliente, c.nombre, c.apellido, u.ultima_compra,
-       r.fecha - u.ultima_compra AS dias,
-       CASE WHEN u.ultima_compra IS NULL
-              OR r.fecha - u.ultima_compra &gt; 90 THEN 'inactivo'
-            WHEN r.fecha - u.ultima_compra &gt; 30 THEN 'en_riesgo'
-            ELSE 'activo'
-       END AS estado
+        <pre>WITH referencia AS (
+    SELECT COALESCE(MAX(fecha)::date + 1, current_date) AS fecha FROM ventas
+),
+compras AS (
+    SELECT id_cliente, MAX(fecha)::date AS ultima_compra, SUM(total) AS total_gastado
+    FROM ventas
+    GROUP BY id_cliente
+)
+SELECT c.id_cliente, c.nombre, c.apellido, co.ultima_compra,
+       r.fecha - co.ultima_compra                 AS dias,
+       estado_cliente(r.fecha - co.ultima_compra) AS estado
 FROM clientes c
 CROSS JOIN referencia r
-LEFT JOIN ultima u ON u.id_cliente = c.id_cliente
-ORDER BY u.ultima_compra DESC NULLS LAST;</pre>
+LEFT JOIN compras co ON co.id_cliente = c.id_cliente;</pre>
       </section>
 
       <!-- ================= 6 ================= -->
@@ -800,9 +866,9 @@ ORDER BY u.ultima_compra DESC NULLS LAST;</pre>
         <h2>6.2 Semáforos</h2>
         <p>
           El tablero tiene tres semáforos con tres estados cada uno. El estado se
-          calcula en SQL con datos reales de la base y siempre se muestra con su texto
-          (no solo con el color), acompañado de una referencia visible en la misma
-          pantalla.
+          calcula en la base de datos, con las funciones de la sección 5.3 aplicadas a
+          los datos reales, y siempre se muestra con su texto (no solo con el color),
+          acompañado de una referencia visible en la misma pantalla.
         </p>
         <table>
           <thead>

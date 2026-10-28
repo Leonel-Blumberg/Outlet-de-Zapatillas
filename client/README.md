@@ -44,7 +44,9 @@ Se comunica por HTTP/JSON con la API de **ASP.NET Core** que está en
     configuración de los semáforos (**`semaforo.js`**) y validaciones.
   - **`config.js`**: nombre de la app, URL de la API, modo de prueba y filas por
     página.
-- **`scripts/`**: capturas de pantalla y PDF de la entrega final.
+- **`scripts/`**: capturas de pantalla y PDF de la entrega final, y el
+  generador de **`server/base de datos/03_siembra_datos.sql`** a partir de los
+  datos de prueba (**`npm run generar-siembra`**).
 
 ## Requisitos previos
 

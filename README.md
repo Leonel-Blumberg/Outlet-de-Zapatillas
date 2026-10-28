@@ -21,7 +21,8 @@ la materia **Bases de Datos Aplicada**.
 - **Backend** en **`server/`**: API de autenticación con token JWT y consultas
   del tablero.
 - **Base de datos** en **`server/base de datos/`**: scripts SQL de creación de
-  las 10 tablas y de carga de datos.
+  las 10 tablas, carga de datos de prueba (seis meses de ventas) y las
+  funciones y vistas que calculan los semáforos.
 - **Indicadores del mes**: ventas, cumplimiento del objetivo, pares vendidos y
   ticket promedio, con su variación contra el mes anterior.
 - **Semaforización** de cumplimiento de objetivos, stock por talle y actividad
