@@ -4,12 +4,6 @@ Este documento define los endpoints que el **frontend** (`client/`) consume y
 que el **backend** (`server/`) implementa. Si se cambia un endpoint, hay que
 cambiarlo en los dos lados y en este documento.
 
-El front también puede funcionar sin el backend, con datos de prueba que
-respetan este mismo contrato (`npm run dev:mocks`, ver `client/README.md`). Esos
-datos están en `client/src/api/mocks/` y son los mismos que carga
-`server/base de datos/03_siembra_datos.sql`, así que la API real y el modo de
-prueba devuelven las mismas respuestas.
-
 ## Convenciones
 
 - Todas las rutas empiezan con **`/api`**.
