@@ -6,7 +6,7 @@ using OutletApi.Models;
 namespace OutletApi.Data;
 
 // Consultas de ventas: totales por sucursal, los cuatro niveles del drill down y el listado de
-// "Detalle de ventas". Todas son SQL escrito a mano y parametrizado; los semáforos los calculan
+// "Detalle de ventas". Todas son SQL escrito a mano y parametrizado. Los semáforos los calculan
 // las funciones de 04_vistas_y_funciones.sql.
 public class VentasRepository(NpgsqlDataSource db)
 {

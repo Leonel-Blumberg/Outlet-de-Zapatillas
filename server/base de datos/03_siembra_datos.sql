@@ -1,9 +1,5 @@
 -- Outlet de Zapatillas - Datos de prueba del tablero (PostgreSQL)
 --
--- ARCHIVO GENERADO con: cd client && npm run generar-siembra
--- Sale de client/src/api/mocks/datos.js, así la base tiene los mismos datos que el modo de
--- prueba del front. Para cambiar los datos, modificar ese archivo y volver a generarlo.
---
 -- Contenido: 5 sucursales, 6 marcas, 3 categorías, 26 productos,
 -- 1430 filas de stock, 2800 clientes, 30 objetivos mensuales,
 -- 9308 ventas y 12386 líneas de detalle (del 01/04/2026 al 30/09/2026).
