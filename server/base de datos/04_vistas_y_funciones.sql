@@ -83,7 +83,7 @@ compras AS (
     CROSS JOIN referencia r
     GROUP BY v.id_cliente
 ),
--- Sucursal habitual: donde hizo más compras; si empata, la de la compra más reciente
+-- Sucursal habitual: donde hizo más compras. Si empata, la de la compra más reciente
 por_sucursal AS (
     SELECT id_cliente,
            id_sucursal,
