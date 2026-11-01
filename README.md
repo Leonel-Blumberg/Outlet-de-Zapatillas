@@ -58,10 +58,6 @@ Luego, en otra terminal, ejecutar **`npm install`** y **`npm run dev`** dentro
 de **`client`**. Vite redirige las llamadas a **`/api`** al backend, así que no
 hace falta configurar CORS.
 
-Para ver el front sin el backend, ejecutar **`npm run dev:mocks`** dentro de
-**`client`**: usa datos de prueba que respetan el contrato de la API (ver
-**`client/README.md`**).
-
 Usuarios de prueba (solo para desarrollo):
 
 - **`admin@outlet.com`** / **`Admin1234`**: rol admin.
