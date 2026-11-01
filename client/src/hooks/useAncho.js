@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from "react";
 
-// Ancho en píxeles de un elemento; se actualiza cuando cambia el tamaño de la ventana
+// Ancho en píxeles de un elemento. Se actualiza cuando cambia el tamaño de la ventana
 export function useAncho(ref) {
   const [ancho, setAncho] = useState(0);
 

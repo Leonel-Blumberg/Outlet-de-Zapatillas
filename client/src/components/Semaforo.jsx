@@ -1,6 +1,6 @@
 import { COLOR_POR_TONO, SEMAFOROS, estadoSemaforo } from "../utils/semaforo";
 
-// Indicador de semaforización: siempre lleva el texto del estado, no solo el color
+// Indicador de semaforización
 export function EstadoBadge({ tipo, estado, etiqueta }) {
   const config = estadoSemaforo(tipo, estado);
   const tono = config?.tono ?? "neutro";
@@ -13,7 +13,6 @@ export function EstadoBadge({ tipo, estado, etiqueta }) {
 }
 
 // Referencia que explica qué representa cada color de un semáforo.
-// "tarjeta": lista vertical con el color y la explicación; "linea": una sola línea al pie
 export function ReferenciasSemaforo({ tipo, variante = "linea", titulo }) {
   const estados = Object.entries(SEMAFOROS[tipo].estados);
 

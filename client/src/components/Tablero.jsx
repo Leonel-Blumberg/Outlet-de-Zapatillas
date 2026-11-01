@@ -1,6 +1,6 @@
 import { formatPorcentaje } from "../utils/format";
 
-// Piezas de maquetación comunes a todas las pantallas del tablero
+// Piezas comunes en todas las pantallas del tablero
 
 export function PageHeader({ titulo, subtitulo, children }) {
   return (
@@ -31,7 +31,7 @@ export function Card({ titulo, subtitulo, accion, children, className = "" }) {
   );
 }
 
-// Indicador numérico (stat tile): nombre, valor y, opcionalmente, variación o estado
+// Indicador numérico: nombre, valor y, opcionalmente, variación o estado
 export function KpiCard({ label, valor, children }) {
   return (
     <div className="card kpi">
@@ -42,10 +42,12 @@ export function KpiCard({ label, valor, children }) {
   );
 }
 
-// "▲ 9,8% vs. agosto": verde si sube, rojo si baja
+// Verde si sube, rojo si baja
 export function Variacion({ valor, referencia }) {
   if (valor === null || valor === undefined)
-    return <span className="delta delta-neutra">Sin datos de {referencia}</span>;
+    return (
+      <span className="delta delta-neutra">Sin datos de {referencia}</span>
+    );
   const sube = valor > 0.05;
   const baja = valor < -0.05;
   const clase = sube ? "delta-sube" : baja ? "delta-baja" : "delta-neutra";
@@ -53,14 +55,16 @@ export function Variacion({ valor, referencia }) {
   return (
     <span className={`delta ${clase}`}>
       <span aria-hidden="true">{flecha}</span>
-      <span className="sr-only">{sube ? "Subió" : baja ? "Bajó" : "Igual"}</span>
+      <span className="sr-only">
+        {sube ? "Subió" : baja ? "Bajó" : "Igual"}
+      </span>
       {formatPorcentaje(Math.abs(valor))}
       {referencia && ` vs. ${referencia}`}
     </span>
   );
 }
 
-// Barra de avance (0 a 100). El fondo es un tono más claro del mismo color
+// Barra de avance (0 a 100).
 export function Barra({ valor, tono = "acento" }) {
   const ancho = Math.max(0, Math.min(100, valor ?? 0));
   return (

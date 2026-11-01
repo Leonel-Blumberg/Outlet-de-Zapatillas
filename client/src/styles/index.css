@@ -411,7 +411,7 @@ a {
   min-height: 100vh;
 }
 
-/* El fondo de la barra ocupa todo el alto; el contenido queda fijo al hacer scroll */
+/* El fondo de la barra ocupa todo el alto y el contenido queda fijo al hacer scroll */
 .sidebar {
   background: var(--surface);
   border-right: 1px solid var(--border);
@@ -531,15 +531,6 @@ a {
 
 .main > * {
   max-width: 1480px;
-}
-
-.aviso-mocks {
-  margin-bottom: 20px;
-  padding: 8px 12px;
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius);
-  color: var(--text-muted);
-  font-size: 0.85rem;
 }
 
 .pagina {

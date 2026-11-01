@@ -51,7 +51,7 @@ export function formatMonedaCorta(n) {
   return formatMoneda(n);
 }
 
-// 96 -> "96,0%"; null -> "—"
+// 96 -> "96,0%" y null -> guion largo
 export const formatPorcentaje = (n, decimales = 1) =>
   n === null || n === undefined || Number.isNaN(n)
     ? "—"
@@ -105,7 +105,7 @@ export const variacion = (actual, anterior) =>
 export const participacion = (valor, total) =>
   total ? (valor / total) * 100 : 0;
 
-// { ciudad: "Rosario", provincia: "Santa Fe" } -> "Rosario, Santa Fe"; "CABA" una sola vez
+// { ciudad: "Rosario", provincia: "Santa Fe" } -> "Rosario, Santa Fe". "CABA" una sola vez
 export const formatUbicacion = ({ ciudad, provincia }) =>
   !provincia || ciudad === provincia ? ciudad : `${ciudad}, ${provincia}`;
 

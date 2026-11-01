@@ -75,7 +75,7 @@ export const SEMAFOROS = {
 
 export const COLOR_POR_TONO = { verde: "Verde", amarillo: "Amarillo", rojo: "Rojo" };
 
-// Configuración de un estado; null si el backend no lo informó (por ejemplo, sucursal sin objetivo)
+// Configuración de un estado, o null si el backend no lo informó (por ejemplo, sucursal sin objetivo)
 export const estadoSemaforo = (tipo, estado) =>
   SEMAFOROS[tipo].estados[estado] ?? null;
 

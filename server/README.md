@@ -54,9 +54,7 @@ mano y parametrizado.
     hasheada.
   - **`03_siembra_datos.sql`**: datos de prueba con `INSERT` (5 sucursales, 26
     productos, 1.430 registros de stock, 2.800 clientes, 30 objetivos, 9.308
-    ventas y 12.386 líneas de detalle, de abril a septiembre de 2026). Se genera
-    con **`npm run generar-siembra`** dentro de **`client`**, a partir de los
-    datos de prueba del front, así los dos modos muestran lo mismo.
+    ventas y 12.386 líneas de detalle, de abril a septiembre de 2026).
   - **`04_vistas_y_funciones.sql`**: funciones de los semáforos y las vistas
     **`vista_stock`** y **`vista_actividad_clientes`**.
 - Estructura de **`OutletApi/`**:

@@ -27,8 +27,6 @@ Se comunica por HTTP/JSON con la API de **ASP.NET Core** que está en
 - Estructura de **`src/`**:
   - **`api/`**: llamadas HTTP (**`http.js`**), endpoints de autenticación
     (**`auth.js`**) y del tablero (**`tablero.js`**).
-  - **`api/mocks/`**: datos de prueba y un backend simulado con los mismos
-    endpoints del contrato (solo se usan con **`npm run dev:mocks`**).
   - **`components/`**: barra lateral (**`AppLayout`**), semáforo y sus
     referencias, gráficos, filtros, paginación, navegación del drill down y
     piezas comunes del tablero.
@@ -42,19 +40,15 @@ Se comunica por HTTP/JSON con la API de **ASP.NET Core** que está en
   - **`styles/`**: estilos globales y tokens de color.
   - **`utils/`**: formato de números, importes y fechas (**`format.js`**),
     configuración de los semáforos (**`semaforo.js`**) y validaciones.
-  - **`config.js`**: nombre de la app, URL de la API, modo de prueba y filas por
-    página.
-- **`scripts/`**: capturas de pantalla y PDF de la entrega final, y el
-  generador de **`server/base de datos/03_siembra_datos.sql`** a partir de los
-  datos de prueba (**`npm run generar-siembra`**).
+  - **`config.js`**: nombre de la app, URL de la API y filas por página.
+- **`scripts/`**: capturas de pantalla y PDF de la entrega final.
 
 ## Requisitos previos
 
 Para ejecutar el frontend se necesita:
 
 - **Node.js 20** o superior.
-- El **backend** corriendo (ver **`server/README.md`**), salvo que se use el
-  modo de prueba (**`npm run dev:mocks`**).
+- El **backend** corriendo (ver **`server/README.md`**).
 
 ## Configuración local
 
@@ -63,15 +57,10 @@ Para ejecutar el frontend se necesita:
   desarrollo. Por defecto, **`http://localhost:5000`**.
 - **`VITE_API_URL`**: prefijo de la API para builds de producción. Por defecto,
   **`/api`**.
-- **`VITE_USE_MOCKS`**: con **`true`**, el front usa los datos de prueba de
-  **`src/api/mocks`** en lugar del backend. Lo activa **`npm run dev:mocks`**
-  (archivo **`.env.mocks`**).
 
 Para instalar las dependencias, ejecutar **`npm install`**. Luego:
 
 - **`npm run dev`**: servidor de desarrollo contra el backend.
-- **`npm run dev:mocks`**: servidor de desarrollo con datos de prueba, sin
-  backend. Se muestra un aviso arriba de cada pantalla.
 - **`npm run build`**: versión de producción.
 - **`npm run lint`**: revisión del código.
 

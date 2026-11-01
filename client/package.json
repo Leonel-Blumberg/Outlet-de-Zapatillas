@@ -5,13 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:mocks": "vite --mode mocks",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "capturas": "node scripts/capturas.mjs",
-    "pdf": "node scripts/pdf.mjs",
-    "generar-siembra": "node scripts/generar-siembra.mjs"
+    "pdf": "node scripts/pdf.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

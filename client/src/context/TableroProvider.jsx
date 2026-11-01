@@ -18,12 +18,11 @@ export function TableroProvider({ children }) {
   const { data: catalogos, error, recargar } = useApi(getCatalogos, []);
   const [periodoElegido, setPeriodoElegido] = useState(leerPeriodoGuardado);
 
-  // Si no se eligió un mes (o el guardado ya no tiene ventas) se muestra el más reciente
+  // Si no se eligió un mes se muestra el más nuevo
   const periodo = useMemo(() => {
     if (!catalogos) return null;
     const existe = catalogos.periodos.some(
-      (p) =>
-        p.anio === periodoElegido?.anio && p.mes === periodoElegido?.mes,
+      (p) => p.anio === periodoElegido?.anio && p.mes === periodoElegido?.mes,
     );
     return existe ? periodoElegido : (catalogos.periodos[0] ?? null);
   }, [catalogos, periodoElegido]);
@@ -44,7 +43,9 @@ export function TableroProvider({ children }) {
   if (!periodo)
     return (
       <ErrorCarga
-        error={{ message: "Todavía no hay ventas cargadas en la base de datos." }}
+        error={{
+          message: "Todavía no hay ventas cargadas en la base de datos.",
+        }}
         onReintentar={recargar}
       />
     );

@@ -1,9 +1,11 @@
 import { formatNumero } from "../utils/format";
 
-// Páginas a mostrar: la primera, la última y las vecinas de la actual ("…" en los saltos)
+// Páginas a mostrar
 function paginasVisibles(actual, ultima) {
   const paginas = new Set([1, ultima, actual - 1, actual, actual + 1]);
-  const lista = [...paginas].filter((p) => p >= 1 && p <= ultima).sort((a, b) => a - b);
+  const lista = [...paginas]
+    .filter((p) => p >= 1 && p <= ultima)
+    .sort((a, b) => a - b);
   const conSaltos = [];
   lista.forEach((p, i) => {
     if (i > 0 && p - lista[i - 1] > 1) conSaltos.push(`salto-${p}`);
