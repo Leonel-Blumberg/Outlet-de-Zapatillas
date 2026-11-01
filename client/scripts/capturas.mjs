@@ -1,7 +1,6 @@
 // Saca las capturas de todas las pantallas para el documento de la entrega (docs/img/entrega2).
 //
-// Uso: con el front corriendo (npm run dev, o npm run dev:mocks para los datos de prueba),
-// ejecutar en otra terminal: npm run capturas
+// Uso: con el front corriendo (npm run dev), ejecutar en otra terminal: npm run capturas
 // La primera vez hay que instalar el navegador: npx playwright install chromium
 import { mkdir } from "node:fs/promises";
 import path from "node:path";

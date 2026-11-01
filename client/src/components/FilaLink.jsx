@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Icon from "./Icon";
 
 // Fila de tabla en la que se puede hacer clic para bajar un nivel (drill down).
-// El nombre de la fila es un <LinkFila>, así también se puede navegar con el teclado
 export function FilaLink({ to, children }) {
   const navigate = useNavigate();
   return (

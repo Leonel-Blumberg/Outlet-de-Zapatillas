@@ -1,4 +1,4 @@
-import { API_BASE_URL, USE_MOCKS } from "../config";
+import { API_BASE_URL } from "../config";
 
 const TOKEN_KEY = "outlet.token";
 
@@ -53,18 +53,10 @@ async function fetchBackend(url, method, body) {
   return { status: response.status, data };
 }
 
-// Con VITE_USE_MOCKS=true las respuestas salen de src/api/mocks (mismo contrato que el backend)
-async function fetchMock(url, method, body) {
-  const { responderMock } = await import("./mocks/servidor.js");
-  return responderMock({ url, method, body, token: tokenStorage.get() });
-}
-
 // Envuelve fetch: agrega el token JWT y traduce los errores del backend a mensajes legibles
 export async function request(path, { method = "GET", body, params } = {}) {
   const url = `${path}${queryString(params)}`;
-  const { status, data } = USE_MOCKS
-    ? await fetchMock(url, method, body)
-    : await fetchBackend(url, method, body);
+  const { status, data } = await fetchBackend(url, method, body);
 
   if (status >= 200 && status < 300) return data;
 

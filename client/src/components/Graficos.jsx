@@ -11,14 +11,21 @@ import {
 
 const DIAS_SEMANA = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
-// Divide el eje Y en 4 o 5 tramos "redondos" (0, 5 M, 10 M…)
+// Divide el eje Y en 4 o 5 tramos redondos (0, 5 M, 10 M…)
 function ticksEjeY(maximo) {
   const crudo = maximo / 4;
   const magnitud = 10 ** Math.floor(Math.log10(crudo));
   const normalizado = crudo / magnitud;
   const paso =
-    (normalizado <= 1 ? 1 : normalizado <= 2 ? 2 : normalizado <= 2.5 ? 2.5 : normalizado <= 5 ? 5 : 10) *
-    magnitud;
+    (normalizado <= 1
+      ? 1
+      : normalizado <= 2
+        ? 2
+        : normalizado <= 2.5
+          ? 2.5
+          : normalizado <= 5
+            ? 5
+            : 10) * magnitud;
   const tope = Math.ceil(maximo / paso) * paso;
   const ticks = [];
   for (let v = 0; v <= tope + paso / 2; v += paso) ticks.push(v);
@@ -35,7 +42,7 @@ const ALTO_PLOT = 220;
 const ALTO_EJE_X = 28;
 const MARGEN = { arriba: 12, izquierda: 64, derecha: 8 };
 
-// Ventas de cada día del mes (una sola serie: no lleva leyenda, la nombra el título de la tarjeta)
+// Ventas de cada día del mes
 export function BarrasPorDia({ dias }) {
   const contenedor = useRef(null);
   const ancho = useAncho(contenedor);
@@ -100,7 +107,12 @@ export function BarrasPorDia({ dias }) {
                 {d.ventas > 0 && (
                   <path
                     className={`grafico-columna${activo === i ? " grafico-columna-activa" : ""}`}
-                    d={pathColumna(xCentro(i) - anchoBarra / 2, y(d.ventas), anchoBarra, base)}
+                    d={pathColumna(
+                      xCentro(i) - anchoBarra / 2,
+                      y(d.ventas),
+                      anchoBarra,
+                      base,
+                    )}
                   />
                 )}
                 {mostrarEtiqueta && (

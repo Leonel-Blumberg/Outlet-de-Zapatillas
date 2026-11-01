@@ -28,9 +28,12 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/resumen" element={<ResumenPage />} />
 
-              {/* Drill down: cada nivel tiene su URL, así también funciona el botón atrás */}
+              {/* Drill down */}
               <Route path="/ventas" element={<VentasSucursalesPage />} />
-              <Route path="/ventas/:idSucursal" element={<VentasMarcasPage />} />
+              <Route
+                path="/ventas/:idSucursal"
+                element={<VentasMarcasPage />}
+              />
               <Route
                 path="/ventas/:idSucursal/:idMarca"
                 element={<VentasModelosPage />}

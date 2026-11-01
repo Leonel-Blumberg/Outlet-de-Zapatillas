@@ -7,13 +7,19 @@ import { useTablero } from "../context/TableroContext";
 // Controles de filtro de las pantallas del tablero
 
 // Campo de búsqueda: avisa el texto recién cuando el usuario deja de escribir
-export function Buscador({ label, placeholder, valor, onBuscar, demora = 350 }) {
+export function Buscador({
+  label,
+  placeholder,
+  valor,
+  onBuscar,
+  demora = 350,
+}) {
   const id = useId();
   const [texto, setTexto] = useState(valor);
   const [valorAnterior, setValorAnterior] = useState(valor);
   const timer = useRef(null);
 
-  // Si el filtro se limpia desde afuera ("Limpiar filtros"), se vacía el campo
+  // Si el filtro se limpia desde afuera, se vacía el campo
   if (valor !== valorAnterior) {
     setValorAnterior(valor);
     setTexto(valor);

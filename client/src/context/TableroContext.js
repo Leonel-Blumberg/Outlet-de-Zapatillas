@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 
-// Datos compartidos por todas las pantallas del tablero: catálogos (sucursales, marcas,
-// períodos con ventas) y el mes elegido. El valor lo provee <TableroProvider>
+// Datos compartidos por todas las pantallas del tablero
 export const TableroContext = createContext(null);
 
 export function useTablero() {

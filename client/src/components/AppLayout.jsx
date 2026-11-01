@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { TableroProvider } from "../context/TableroProvider";
-import { APP_NAME, USE_MOCKS } from "../config";
+import { APP_NAME } from "../config";
 import { iniciales } from "../utils/format";
 import Icon from "./Icon";
 import Logo from "./Logo";
@@ -61,12 +61,6 @@ export default function AppLayout() {
       </aside>
 
       <main className="main">
-        {USE_MOCKS && (
-          <p className="aviso-mocks" role="note">
-            Modo de prueba: los datos salen de <code>src/api/mocks</code>, no de
-            la base de datos.
-          </p>
-        )}
         <TableroProvider>
           <Outlet />
         </TableroProvider>
